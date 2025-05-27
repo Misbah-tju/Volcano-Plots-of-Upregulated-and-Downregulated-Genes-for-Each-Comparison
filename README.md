@@ -8,7 +8,7 @@ This repository provides a **live, interactive volcano plot customizer** for vis
 - **📁 Excel Upload Support**: Direct drag-and-drop Excel file processing
 - **🎨 Full Customization**: Colors, thresholds, point sizes, and transparency
 - **📊 Live Statistics**: Real-time gene counts and percentages
-- **💾 Export Options**: PNG, SVG, and interactive HTML formats
+- **💾 Export Options**: PNG, SVG, and interactive HTML formats 
 - **📈 Sample Data**: Built-in demo data to try it immediately
 
 ## 🚀 Quick Start
