@@ -1,198 +1,126 @@
-# Volcano Plots of Upregulated and Downregulated Genes
+# 🧬 Interactive Volcano Plot Customizer
 
-This repository contains code for creating volcano plots to visualize differentially expressed genes between MG72 and MG24 conditions.
+This repository provides a **live, interactive volcano plot customizer** for visualizing differentially expressed genes. Upload your Excel data and watch the plot update in real-time as you adjust parameters!
 
-## Overview
+## ✨ Key Features
 
-A volcano plot is a type of scatter plot that is used to quickly identify changes in large data sets composed of replicate data. It plots significance versus fold-change on the y and x axes, respectively.
+- **🔴 Live Interactive Customizer**: Real-time volcano plot generation with instant updates
+- **📁 Excel Upload Support**: Direct drag-and-drop Excel file processing
+- **🎨 Full Customization**: Colors, thresholds, point sizes, and transparency
+- **📊 Live Statistics**: Real-time gene counts and percentages
+- **💾 Export Options**: PNG, SVG, and interactive HTML formats
+- **📈 Sample Data**: Built-in demo data to try it immediately
 
-### What the Plot Shows:
-- **X-axis**: log₂(Fold Change) - indicates magnitude of expression change
-- **Y-axis**: -log₁₀(P-value) - indicates statistical significance
-- **Red points**: Upregulated genes (higher expression in MG72 vs MG24)
-- **Cyan/Teal points**: Downregulated genes (lower expression in MG72 vs MG24)
-- **Gray points**: Non-significant genes
+## 🚀 Quick Start
 
-## Files in this Repository
+### ⭐ **FASTEST WAY TO START:**
+- **Windows**: Double-click `start_volcano_customizer.bat`
+- **Any OS**: Open `index.html` in your browser for the main menu
 
-### Python Scripts
-1. **`working_volcano.py`** - Main working script that generates the volcano plot
-2. **`volcano_plot_analysis.ipynb`** - Jupyter notebook for interactive analysis
-3. **`simple_volcano.py`** - Simplified version for testing
-4. **`robust_volcano.py`** - Version with multiple encoding handling
+### ⭐ **MAIN FEATURE: Live Interactive Customizer**
+1. Open `Create Working with Html/live_volcano_customizer.html` in your web browser
+2. **Option A**: Click "Upload Excel File" and drag your Excel data, or
+3. **Option B**: Click "Use Sample Data" to see it in action immediately
+4. Adjust any parameters and watch the plot update in real-time!
+5. Export your customized plot in your preferred format
 
-### Data
-- **`Data for Making Graph/`** - Contains the gene expression data
-  - **`MG72VSMG24_genes_significantly_differential_expression.xlsx/Data.txt`** - Gene expression data file
+### Alternative Options
+- **Python Script**: Run `Create with Excel and python/working_volcano.py` for static plot generation
+- **Jupyter Analysis**: Use `Create with Excel and python/volcano_plot_analysis.ipynb` for detailed analysis
 
-### Output Files
-- **`volcano_plot_MG72_vs_MG24.png`** - High-resolution PNG plot (300 DPI)
-- **`volcano_plot_MG72_vs_MG24.pdf`** - Publication-ready PDF plot
+## 📊 Understanding Volcano Plots
+- **X-axis**: log₂(Fold Change) - magnitude of expression change
+- **Y-axis**: -log₁₀(P-value) - statistical significance  
+- **🔴 Red points**: Upregulated genes (higher expression)
+- **🔵 Blue points**: Downregulated genes (lower expression)
+- **⚪ Gray points**: Non-significant genes
 
-## Results Summary
+## 📁 Project Structure
 
-From the analysis of the gene expression data:
+### 🚀 **Quick Access Files**
+- **`index.html`** - Main menu and project overview
+- **`start_volcano_customizer.bat`** - Windows quick-start script
 
-- **Total genes analyzed**: 15
-- **Significantly differentially expressed**: 15 (100.0%)
-- **Upregulated genes (MG72 > MG24)**: 11 (73.3%)
-- **Downregulated genes (MG72 < MG24)**: 4 (26.7%)
+### 🌐 **Create Working with Html/** (⭐ MAIN FEATURES)
+- **`live_volcano_customizer.html`** - Live interactive volcano plot customizer
+- **`volcano_plot_customizer.html`** - Python code generator with controls
 
-### Significance Thresholds
+### 🐍 **Create with Excel and python/**  
+- **`working_volcano.py`** - Static plot generation script
+- **`volcano_plot_analysis.ipynb`** - Jupyter notebook analysis
+- **`volcano_plot_MG72_vs_MG24_complete_dataset.png/pdf`** - Publication-ready plots
+
+### 📈 **Data for Making Graph/**
+- **`MG72VSMG24_Gene_differential_expression.xlsx`** - Complete dataset (17,437 genes)
+
+## 📊 Dataset Results (MG72 vs MG24)
+
+From the complete gene expression analysis:
+
+- **Total genes analyzed**: 17,437
+- **Upregulated genes**: 2,491 (14.3%)
+- **Downregulated genes**: 6,326 (36.3%)
+- **Non-significant genes**: 8,620 (49.4%)
+- **Total significant genes**: 8,817 (50.6%)
+
+### Analysis Parameters
 - **Fold Change threshold**: ±2.0 (log₂FC: ±1.00)
 - **P-value threshold**: 0.05 (-log₁₀: 1.30)
 
-### Top Upregulated Genes
-1. **Mn4_03848**: FC = 32.15, p < 0.01 - Uroporphyrin-III C-methyltransferase
-2. **Mn4_08578**: FC = 20.90, p < 0.01 - Hypothetical protein
-3. **Mn4_00256**: FC = 19.12, p < 0.01 - Glycerol/water channel protein
-4. **Mn4_17519**: FC = 17.74, p < 0.01 - Hypothetical protein
-5. **Mn4_05536**: FC = 16.00, p < 0.01 - Hypothetical protein
+## 💻 Technical Requirements
 
-### Top Downregulated Genes
-1. **Mn4_14323**: FC = 0.00, p < 0.01 - Fatty acid biosynthesis protein
-2. **Mn4_11302**: FC = 0.00, p < 0.01 - Hypothetical protein
-3. **Mn4_13634**: FC = 0.01, p < 0.01 - Acyltransferase/oxidoreductase
-4. **Mn4_05378**: FC = 0.03, p < 0.01 - Hypothetical protein
+### For HTML Interactive Tools
+- Any modern web browser (Chrome, Firefox, Safari, Edge)
+- No additional installations required!
 
-# 🧬 Volcano Plot Analysis: MG72 vs MG24 Gene Expression
-
-## 📊 Complete Dataset Analysis (Final Version)
-
-This project generates volcano plots for differential gene expression analysis comparing MG72 vs MG24 conditions using the complete gene dataset.
-
-### 🎯 **Current Working Files:**
-- **`working_volcano.py`** - Main Python script for generating volcano plots
-- **`volcano_plot_MG72_vs_MG24_complete_dataset.png`** - High-resolution volcano plot (300 DPI)
-- **`volcano_plot_MG72_vs_MG24_complete_dataset.pdf`** - Publication-ready PDF version
-- **`volcano_plot_analysis.ipynb`** - Jupyter notebook for interactive analysis
-- **`README.md`** - This documentation file
-
-### 📈 **Dataset Information:**
-- **Source:** `Data for Making Graph/MG72VSMG24_Gene_differential_expression.xlsx`
-- **Total genes analyzed:** 17,437
-- **Comparison:** MG72 vs MG24 conditions
-
-### 🔬 **Results Summary:**
-- **Upregulated genes:** 2,491 (14.3%)
-- **Downregulated genes:** 6,326 (36.3%)
-- **Non-significant genes:** 8,620 (49.4%)
-- **Total significant genes:** 8,817 (50.6%)
-
-### 🏃‍♂️ **Quick Start:**
+### For Python Scripts
 ```bash
-# Run the volcano plot analysis
-python working_volcano.py
+pip install pandas matplotlib numpy seaborn openpyxl
 ```
 
-### 🎨 **Plot Features:**
-- **Color coding:** Red (upregulated), Cyan (downregulated), Gray (non-significant)
-- **Significance thresholds:** |log₂(FC)| ≥ 1.0, p-value ≤ 0.05
-- **Statistics box:** Gene counts and percentages
-- **High-quality output:** 300 DPI PNG + PDF formats
+## 📊 Data Format Support
 
-### 📋 **Requirements:**
-- Python 3.x
-- pandas
-- matplotlib
-- numpy
-- seaborn
-- openpyxl (for Excel file reading)
+The tools support Excel files (.xlsx) with the following expected columns:
+- `gene_name` or `gene_id`: Gene identifier
+- `log2(fc)`: Log₂ fold change values  
+- `pval`: P-value for statistical significance
 
----
-*Generated on May 28, 2025*
+The live customizer automatically detects column names and provides helpful error messages for any formatting issues.
 
-## Requirements
+## 🎨 Customization Options
 
-### Python Libraries
-```bash
-pip install pandas matplotlib numpy seaborn
-```
+### Live Interactive Features
+- **Colors**: Upregulated, downregulated, and non-significant gene colors
+- **Thresholds**: Fold change and p-value significance cutoffs
+- **Point Settings**: Size, transparency, and outline options
+- **Labels**: Custom axis labels and title
+- **Export**: PNG, SVG, and interactive HTML formats
 
-### Required Packages
-- `pandas` - Data manipulation and analysis
-- `matplotlib` - Plotting library
-- `numpy` - Numerical computing
-- `seaborn` - Statistical data visualization
-
-## Usage
-
-### Running the Main Script
-```bash
-python working_volcano.py
-```
-
-### Using the Jupyter Notebook
-1. Open `volcano_plot_analysis.ipynb` in Jupyter Notebook or JupyterLab
-2. Run all cells to reproduce the analysis
-
-### Script Features
-- Automatic data loading and preprocessing
-- Customizable significance thresholds
-- High-quality plot generation (PNG and PDF)
-- Statistical summary of results
+### Python Script Features
+- High-resolution output (300 DPI)
 - Publication-ready formatting
+- Statistical summary boxes
+- Customizable color schemes
+- Multiple export formats
 
-## Plot Interpretation
+## 🔧 Troubleshooting
 
-### Quadrants of the Volcano Plot
-1. **Upper Right**: Significantly upregulated genes (high FC, low p-value)
-2. **Upper Left**: Significantly downregulated genes (low FC, low p-value)
-3. **Lower Middle**: Non-significant genes (any FC, high p-value)
+**Excel Upload Issues:**
+- Ensure your Excel file has the expected column names
+- Check that data is in the first sheet
+- Verify numeric data in log2(fc) and pval columns
 
-### Key Elements
-- **Dotted lines**: Significance thresholds for fold change and p-value
-- **Color coding**: Easy identification of gene regulation status
-- **Legend**: Shows count of genes in each category
-- **Statistics box**: Summary of total and significant genes
+**Performance:**
+- For large datasets (>10,000 genes), the tool automatically samples data for smooth interaction
+- Use the Python scripts for processing very large datasets
 
-## Customization
+## 📖 Citation
 
-You can modify the following parameters in the script:
-
-```python
-# Significance thresholds
-fc_threshold = 2.0          # Fold change threshold
-pval_threshold = 0.05       # P-value threshold
-
-# Plot appearance
-colors = {
-    'Not Significant': '#D3D3D3',  # Light gray
-    'Upregulated': '#FF6B6B',      # Red
-    'Downregulated': '#4ECDC4'     # Teal/cyan
-}
-
-# Figure size
-fig, ax = plt.subplots(figsize=(12, 10))
+If you use this tool in your research, please cite:
 ```
-
-## Data Format
-
-The input data should be a tab-separated file with the following columns:
-- `gene_id`: Unique gene identifier
-- `gene_name`: Gene name
-- `log2(fc)`: Log₂ fold change
-- `pval`: P-value
-- `regulation`: up/down regulation status
-- Additional columns for FPKM values, annotations, etc.
-
-## Citation
-
-If you use this code in your research, please cite this repository:
-
+Interactive Volcano Plot Customizer
+GitHub: https://github.com/[username]/Volcano-Plots-of-Upregulated-and-Downregulated-Genes-for-Each-Comparison
 ```
-Volcano Plots of Upregulated and Downregulated Genes for Each Comparison
-GitHub Repository: https://github.com/[username]/Volcano-Plots-of-Upregulated-and-Downregulated-Genes-for-Each-Comparison
-```
-
-## License
-
-This project is open source and available under the MIT License.
-
-## Contact
-
-For questions or issues, please open an issue in this repository.
 
 ---
-
-**Note**: This analysis compares gene expression between MG72 and MG24 conditions. All genes in this dataset showed significant differential expression, indicating strong biological differences between the two conditions.
+*Last updated: May 28, 2025*

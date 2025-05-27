@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧬 Live Volcano Plot Customizer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .file-upload-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+        }
+        
+        .file-upload {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            margin-right: 20px;
+        }
+        
+        .file-upload:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .sample-data-btn {
+            background: #6c757d;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .sample-data-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            min-height: 80vh;
+        }
+        
+        .controls-panel {
+            background: #f8f9fa;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 80vh;
+            border-right: 1px solid #e9ecef;
+        }
+        
+        .plot-panel {
+            padding: 30px;
+            background: white;
+        }
+        
+        .control-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .control-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+        
+        .control-group input, .control-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .control-group input:focus, .control-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        
+        .range-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .range-group input[type="range"] {
+            flex: 1;
+        }
+        
+        .range-value {
+            background: #4facfe;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .color-input {
+            height: 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .plot-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .plot-stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .upregulated { color: #dc3545; }
+        .downregulated { color: #17a2b8; }
+        .nonsignificant { color: #6c757d; }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4facfe;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .warning-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .data-preview {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧬 Live Volcano Plot Customizer</h1>
+            <p>Upload your Excel file for interactive real-time volcano plots</p>
+        </div>
+        
+        <div class="file-upload-section">
+            <div class="file-upload">
+                <span class="icon">📁</span>Upload Excel File (.xlsx)
+                <input type="file" id="excel-file" accept=".xlsx,.xls" onchange="handleFileUpload(event)">
+            </div>
+            <button class="sample-data-btn" onclick="loadSampleData()">
+                <span class="icon">🧪</span>Use Sample Data
+            </button>
+            <div id="file-status"></div>
+        </div>
+        
+        <div class="main-content" id="main-content" style="display: none;">
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <!-- Data Info -->
+                <div class="control-section">
+                    <h3><span class="icon">📊</span>Dataset Info</h3>
+                    <div id="data-info">
+                        <div class="loading">
+                            <div class="loading-spinner"></div>
+                            No data loaded
+                        </div>
+                    </div>
+                    <div id="column-info" style="display: none;">
+                        <h4 style="margin: 10px 0 5px 0; color: #495057;">Detected Columns:</h4>
+                        <div id="column-list" class="data-preview"></div>
+                    </div>
+                </div>
+                
+                <!-- Colors -->
+                <div class="control-section">
+                    <h3><span class="icon">🎨</span>Colors</h3>
+                    
+                    <div class="control-group">
+                        <label for="upregulated-color">Upregulated Genes</label>
+                        <input type="color" id="upregulated-color" value="#FF4444" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="downregulated-color">Downregulated Genes</label>
+                        <input type="color" id="downregulated-color" value="#00CCCC" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="nonsignificant-color">Non-significant Genes</label>
+                        <input type="color" id="nonsignificant-color" value="#CCCCCC" class="color-input">
+                    </div>
+                </div>
+                
+                <!-- Point Settings -->
+                <div class="control-section">
+                    <h3><span class="icon">⚪</span>Point Settings</h3>
+                    
+                    <div class="control-group">
+                        <label for="point-size">Point Size</label>
+                        <div class="range-group">
+                            <input type="range" id="point-size" min="2" max="15" value="4" step="1">
+                            <span class="range-value" id="point-size-value">4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="point-alpha">Point Transparency</label>
+                        <div class="range-group">
+                            <input type="range" id="point-alpha" min="0.1" max="1.0" value="0.6" step="0.1">
+                            <span class="range-value" id="point-alpha-value">0.6</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Thresholds -->
+                <div class="control-section">
+                    <h3><span class="icon">📏</span>Significance Thresholds</h3>
+                    
+                    <div class="control-group">
+                        <label for="fc-threshold">Fold Change Threshold (log₂)</label>
+                        <div class="range-group">
+                            <input type="range" id="fc-threshold" min="0.5" max="3.0" value="1.0" step="0.1">
+                            <span class="range-value" id="fc-threshold-value">1.0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pval-threshold">P-value Threshold</label>
+                        <select id="pval-threshold">
+                            <option value="0.001">0.001</option>
+                            <option value="0.01">0.01</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.1">0.1</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Title and Labels -->
+                <div class="control-section">
+                    <h3><span class="icon">📝</span>Labels</h3>
+                    
+                    <div class="control-group">
+                        <label for="plot-title">Plot Title</label>
+                        <input type="text" id="plot-title" value="Volcano Plot: MG72 vs MG24" placeholder="Enter title">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="x-label">X-axis Label</label>
+                        <input type="text" id="x-label" value="log₂(Fold Change)" placeholder="X-axis label">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="y-label">Y-axis Label</label>
+                        <input type="text" id="y-label" value="-log₁₀(P-value)" placeholder="Y-axis label">
+                    </div>
+                </div>
+                
+                <!-- Export Options -->
+                <div class="control-section">
+                    <h3><span class="icon">💾</span>Export</h3>
+                    <div class="export-buttons">
+                        <button class="btn btn-primary" onclick="downloadPlotAsPNG()" disabled>
+                            <span class="icon">🖼️</span>PNG
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadPlotAsHTML()" disabled>
+                            <span class="icon">🌐</span>HTML
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadPlotAsSVG()" disabled>
+                            <span class="icon">📄</span>SVG
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Plot Panel -->
+            <div class="plot-panel">
+                <div class="plot-stats" id="plot-stats">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        Loading data and generating plot...
+                    </div>
+                </div>
+                
+                <div class="plot-container">
+                    <div id="volcano-plot" style="width: 100%; height: 650px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let volcanoData = null;
+        let isDataLoaded = false;
+        let dataColumns = null;
+        
+        // Handle Excel file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const statusDiv = document.getElementById('file-status');
+            statusDiv.innerHTML = '<div class="status-message">📤 Reading Excel file...</div>';
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Get first worksheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    if (jsonData.length === 0) {
+                        throw new Error('No data found in Excel file');
+                    }
+                    
+                    // Process the data
+                    processExcelData(jsonData, file.name);
+                    
+                } catch (error) {
+                    console.error('Error reading Excel file:', error);
+                    statusDiv.innerHTML = `<div class="error-message">❌ Error reading file: ${error.message}</div>`;
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+        
+        // Process Excel data and detect column names
+        function processExcelData(rawData, filename) {
+            const statusDiv = document.getElementById('file-status');
+            
+            try {
+                // Store all columns for reference
+                const firstRow = rawData[0];
+                dataColumns = Object.keys(firstRow);
+                
+                // Display detected columns
+                displayColumnInfo(dataColumns, rawData.slice(0, 3));
+                
+                let logFCCol = null;
+                let pValueCol = null;
+                let geneCol = null;
+                
+                // Specific column detection for your data format
+                for (const col of dataColumns) {
+                    const colLower = col.toLowerCase();
+                    // Your specific column names
+                    if (col === 'log2(fc)' || colLower.includes('log2fc') || colLower.includes('logfc') || 
+                        colLower.includes('log_fc') || colLower.includes('fold')) {
+                        logFCCol = col;
+                    }
+                    if (col === 'pval' || colLower.includes('pvalue') || colLower.includes('p_value') || 
+                        colLower.includes('p.value') || colLower.includes('padj') || colLower.includes('fdr')) {
+                        pValueCol = col;
+                    }
+                    if (col === 'gene_name' || colLower.includes('gene') || colLower.includes('symbol') || 
+                        colLower.includes('id') || colLower === 'name') {
+                        geneCol = col;
+                    }
+                }
+                
+                // Show which columns were detected
+                let detectionStatus = `<div class="status-message">
+                    ✅ Loaded ${rawData.length.toLocaleString()} rows from ${filename}<br>
+                    📊 Detected columns:<br>
+                    &nbsp;&nbsp;• Gene names: ${geneCol || 'Not found'}<br>
+                    &nbsp;&nbsp;• Log₂ Fold Change: ${logFCCol || 'Not found'}<br>
+                    &nbsp;&nbsp;• P-values: ${pValueCol || 'Not found'}
+                </div>`;
+                
+                if (!logFCCol || !pValueCol) {
+                    detectionStatus += `<div class="warning-message">
+                        ⚠️ Could not detect all required columns. Available columns: ${dataColumns.join(', ')}
+                    </div>`;
+                    statusDiv.innerHTML = detectionStatus;
+                    return;
+                }
+                
+                // Process data
+                volcanoData = rawData.map((row, index) => {
+                    const logFC = parseFloat(row[logFCCol]);
+                    let pValue = parseFloat(row[pValueCol]);
+                    const gene = geneCol ? row[geneCol] : `Gene_${index + 1}`;
+                    
+                    if (isNaN(logFC) || isNaN(pValue)) {
+                        return null; // Skip invalid rows
+                    }
+                    
+                    // Handle p-values of 0 (replace with very small number)
+                    if (pValue === 0) pValue = 1e-300;
+                    
+                    return {
+                        gene: gene || `Gene_${index + 1}`,
+                        logFC: logFC,
+                        pValue: pValue,
+                        logPValue: -Math.log10(Math.max(pValue, 1e-300))
+                    };
+                }).filter(row => row !== null); // Remove invalid rows
+                
+                if (volcanoData.length === 0) {
+                    throw new Error('No valid data rows found after processing');
+                }
+                
+                isDataLoaded = true;
+                
+                statusDiv.innerHTML = detectionStatus;
+                document.getElementById('main-content').style.display = 'grid';
+                
+                // Enable export buttons
+                document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
+                
+                updateDataInfo();
+                updatePlot();
+                
+            } catch (error) {
+                console.error('Error processing data:', error);
+                statusDiv.innerHTML = `<div class="error-message">❌ Error processing data: ${error.message}</div>`;
+            }
+        }
+        
+        // Display column information
+        function displayColumnInfo(columns, sampleRows) {
+            const columnInfoDiv = document.getElementById('column-info');
+            const columnListDiv = document.getElementById('column-list');
+            
+            let columnInfo = `<strong>Total columns:</strong> ${columns.length}<br><br>`;
+            columnInfo += '<strong>Column names and sample data:</strong><br>';
+            
+            columns.slice(0, 10).forEach(col => {
+                const sampleValue = sampleRows[0] && sampleRows[0][col] !== undefined ? sampleRows[0][col] : 'N/A';
+                columnInfo += `• ${col}: ${sampleValue}<br>`;
+            });
+            
+            if (columns.length > 10) {
+                columnInfo += `... and ${columns.length - 10} more columns`;
+            }
+            
+            columnListDiv.innerHTML = columnInfo;
+            columnInfoDiv.style.display = 'block';
+        }
+        
+        // Load sample data that matches your actual data structure
+        function loadSampleData() {
+            const statusDiv = document.getElementById('file-status');
+            statusDiv.innerHTML = '<div class="status-message">🧪 Generating sample data that matches your Excel structure...</div>';
+            
+            // Generate realistic sample data with your column structure
+            volcanoData = [];
+            const numGenes = 5000;
+            
+            for (let i = 0; i < numGenes; i++) {
+                let logFC, pValue;
+                
+                const geneType = Math.random();
+                if (geneType < 0.15) { // 15% significantly upregulated
+                    logFC = 1 + Math.random() * 4; 
+                    pValue = Math.random() * 0.05; 
+                } else if (geneType < 0.30) { // 15% significantly downregulated
+                    logFC = -1 - Math.random() * 4; 
+                    pValue = Math.random() * 0.05; 
+                } else { // 70% non-significant
+                    logFC = (Math.random() - 0.5) * 2; 
+                    pValue = 0.05 + Math.random() * 0.95; 
+                }
+                
+                volcanoData.push({
+                    gene: `GENE${i + 1}`,
+                    logFC: logFC,
+                    pValue: pValue,
+                    logPValue: -Math.log10(Math.max(pValue, 1e-300))
+                });
+            }
+            
+            isDataLoaded = true;
+            statusDiv.innerHTML = `<div class="status-message">✅ Generated ${volcanoData.length.toLocaleString()} sample genes (matching your data structure)</div>`;
+            document.getElementById('main-content').style.display = 'grid';
+            
+            // Enable export buttons
+            document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
+            
+            updateDataInfo();
+            updatePlot();
+        }
+        
+        // Update data info panel
+        function updateDataInfo() {
+            const dataInfoDiv = document.getElementById('data-info');
+            
+            if (!isDataLoaded || !volcanoData) {
+                dataInfoDiv.innerHTML = '<div class="loading">No data loaded</div>';
+                return;
+            }
+            
+            const totalGenes = volcanoData.length;
+            const fcRange = {
+                min: Math.min(...volcanoData.map(d => d.logFC)),
+                max: Math.max(...volcanoData.map(d => d.logFC))
+            };
+            const pRange = {
+                min: Math.min(...volcanoData.map(d => d.pValue)),
+                max: Math.max(...volcanoData.map(d => d.pValue))
+            };
+            
+            dataInfoDiv.innerHTML = `
+                <div style="font-size: 0.9rem; color: #6c757d;">
+                    <strong>Total Genes:</strong> ${totalGenes.toLocaleString()}<br>
+                    <strong>Log₂FC Range:</strong> ${fcRange.min.toFixed(2)} to ${fcRange.max.toFixed(2)}<br>
+                    <strong>P-value Range:</strong> ${pRange.min.toExponential(2)} to ${pRange.max.toFixed(3)}
+                </div>
+            `;
+        }
+        
+        // Update range value displays
+        function updateRangeValue(id) {
+            const input = document.getElementById(id);
+            const valueDisplay = document.getElementById(id + '-value');
+            if (valueDisplay) {
+                valueDisplay.textContent = input.value;
+            }
+        }
+        
+        // Add event listeners for all controls
+        document.querySelectorAll('input[type="range"]').forEach(input => {
+            input.addEventListener('input', () => {
+                updateRangeValue(input.id);
+                if (isDataLoaded) updatePlot();
+            });
+            updateRangeValue(input.id);
+        });
+        
+        document.querySelectorAll('input[type="color"], input[type="text"], select').forEach(input => {
+            input.addEventListener('input', () => {
+                if (isDataLoaded) updatePlot();
+            });
+        });
+        
+        function categorizeGenes() {
+            if (!volcanoData) return null;
+            
+            const fcThreshold = parseFloat(document.getElementById('fc-threshold').value);
+            const pThreshold = parseFloat(document.getElementById('pval-threshold').value);
+            
+            let upregulated = 0;
+            let downregulated = 0;
+            let nonsignificant = 0;
+            
+            const categorizedData = volcanoData.map(gene => {
+                const isSignificant = gene.pValue < pThreshold;
+                const isUpregulated = gene.logFC > fcThreshold && isSignificant;
+                const isDownregulated = gene.logFC < -fcThreshold && isSignificant;
+                
+                let category = 'nonsignificant';
+                if (isUpregulated) {
+                    category = 'upregulated';
+                    upregulated++;
+                } else if (isDownregulated) {
+                    category = 'downregulated';
+                    downregulated++;
+                } else {
+                    nonsignificant++;
+                }
+                
+                return { ...gene, category };
+            });
+            
+            return {
+                data: categorizedData,
+                stats: { upregulated, downregulated, nonsignificant, total: volcanoData.length }
+            };
+        }
+        
+        function updateStats(stats) {
+            const statsContainer = document.getElementById('plot-stats');
+            const upPct = ((stats.upregulated / stats.total) * 100).toFixed(1);
+            const downPct = ((stats.downregulated / stats.total) * 100).toFixed(1);
+            const nsPct = ((stats.nonsignificant / stats.total) * 100).toFixed(1);
+            
+            statsContainer.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value upregulated">${stats.upregulated.toLocaleString()}</div>
+                        <div class="stat-label">Upregulated (${upPct}%)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value downregulated">${stats.downregulated.toLocaleString()}</div>
+                        <div class="stat-label">Downregulated (${downPct}%)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value nonsignificant">${stats.nonsignificant.toLocaleString()}</div>
+                        <div class="stat-label">Non-significant (${nsPct}%)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${stats.total.toLocaleString()}</div>
+                        <div class="stat-label">Total Genes</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function updatePlot() {
+            if (!isDataLoaded || !volcanoData) return;
+            
+            const result = categorizeGenes();
+            if (!result) return;
+            
+            const { data, stats } = result;
+            updateStats(stats);
+            
+            // Get current settings
+            const upColor = document.getElementById('upregulated-color').value;
+            const downColor = document.getElementById('downregulated-color').value;
+            const nsColor = document.getElementById('nonsignificant-color').value;
+            const pointSize = parseInt(document.getElementById('point-size').value);
+            const pointAlpha = parseFloat(document.getElementById('point-alpha').value);
+            const fcThreshold = parseFloat(document.getElementById('fc-threshold').value);
+            const pThreshold = parseFloat(document.getElementById('pval-threshold').value);
+            const plotTitle = document.getElementById('plot-title').value;
+            const xLabel = document.getElementById('x-label').value;
+            const yLabel = document.getElementById('y-label').value;
+            
+            // Separate data by category
+            const upregulated = data.filter(d => d.category === 'upregulated');
+            const downregulated = data.filter(d => d.category === 'downregulated');
+            const nonsignificant = data.filter(d => d.category === 'nonsignificant');
+            
+            // Performance optimization: subsample non-significant points if too many
+            const maxNSPoints = 8000;
+            const sampleNS = nonsignificant.length > maxNSPoints ? 
+                nonsignificant.sort(() => 0.5 - Math.random()).slice(0, maxNSPoints) : nonsignificant;
+            
+            const traces = [
+                {
+                    x: sampleNS.map(d => d.logFC),
+                    y: sampleNS.map(d => d.logPValue),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: `Non-significant (${nonsignificant.length.toLocaleString()})`,
+                    marker: {
+                        color: nsColor,
+                        size: pointSize,
+                        opacity: pointAlpha,
+                        line: { width: 0 }
+                    },
+                    hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
+                    text: sampleNS.map(d => d.gene)
+                },
+                {
+                    x: downregulated.map(d => d.logFC),
+                    y: downregulated.map(d => d.logPValue),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: `Downregulated (${downregulated.length.toLocaleString()})`,
+                    marker: {
+                        color: downColor,
+                        size: pointSize,
+                        opacity: pointAlpha,
+                        line: { width: 0 }
+                    },
+                    hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
+                    text: downregulated.map(d => d.gene)
+                },
+                {
+                    x: upregulated.map(d => d.logFC),
+                    y: upregulated.map(d => d.logPValue),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: `Upregulated (${upregulated.length.toLocaleString()})`,
+                    marker: {
+                        color: upColor,
+                        size: pointSize,
+                        opacity: pointAlpha,
+                        line: { width: 0 }
+                    },
+                    hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
+                    text: upregulated.map(d => d.gene)
+                }
+            ];
+            
+            // Add threshold lines
+            const logPThreshold = -Math.log10(pThreshold);
+            const xRange = [
+                Math.min(...data.map(d => d.logFC)) - 0.5, 
+                Math.max(...data.map(d => d.logFC)) + 0.5
+            ];
+            const yRange = [0, Math.max(...data.map(d => d.logPValue)) * 1.05];
+            
+            // Horizontal p-value threshold line
+            traces.push({
+                x: xRange,
+                y: [logPThreshold, logPThreshold],
+                mode: 'lines',
+                type: 'scatter',
+                name: `p = ${pThreshold}`,
+                line: { color: 'black', width: 2, dash: 'dash' },
+                showlegend: false,
+                hoverinfo: 'skip'
+            });
+            
+            // Vertical fold change threshold lines
+            traces.push({
+                x: [fcThreshold, fcThreshold],
+                y: yRange,
+                mode: 'lines',
+                type: 'scatter',
+                line: { color: 'black', width: 2, dash: 'dash' },
+                showlegend: false,
+                hoverinfo: 'skip'
+            });
+            
+            traces.push({
+                x: [-fcThreshold, -fcThreshold],
+                y: yRange,
+                mode: 'lines',
+                type: 'scatter',
+                line: { color: 'black', width: 2, dash: 'dash' },
+                showlegend: false,
+                hoverinfo: 'skip'
+            });
+            
+            const layout = {
+                title: {
+                    text: plotTitle,
+                    font: { size: 18 }
+                },
+                xaxis: {
+                    title: {
+                        text: xLabel,
+                        font: { size: 14 }
+                    },
+                    zeroline: true,
+                    zerolinecolor: 'gray',
+                    zerolinewidth: 1,
+                    gridcolor: 'lightgray'
+                },
+                yaxis: {
+                    title: {
+                        text: yLabel,
+                        font: { size: 14 }
+                    },
+                    gridcolor: 'lightgray'
+                },
+                plot_bgcolor: 'white',
+                paper_bgcolor: 'white',
+                legend: {
+                    x: 1.02,
+                    y: 1,
+                    bgcolor: 'rgba(255,255,255,0.9)',
+                    bordercolor: 'rgba(0,0,0,0.2)',
+                    borderwidth: 1
+                },
+                margin: { r: 200, l: 80, t: 80, b: 80 },
+                hovermode: 'closest'
+            };
+            
+            const config = {
+                responsive: true,
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d'],
+                displaylogo: false,
+                toImageButtonOptions: {
+                    format: 'png',
+                    filename: 'volcano_plot',
+                    height: 800,
+                    width: 1200,
+                    scale: 2
+                }
+            };
+            
+            Plotly.newPlot('volcano-plot', traces, layout, config);
+        }
+        
+        function downloadPlotAsPNG() {
+            if (!isDataLoaded) return;
+            Plotly.downloadImage('volcano-plot', {
+                format: 'png',
+                width: 1200,
+                height: 800,
+                filename: 'volcano_plot',
+                scale: 2
+            });
+        }
+        
+        function downloadPlotAsHTML() {
+            if (!isDataLoaded) return;
+            Plotly.downloadImage('volcano-plot', {
+                format: 'html',
+                filename: 'volcano_plot_interactive'
+            });
+        }
+        
+        function downloadPlotAsSVG() {
+            if (!isDataLoaded) return;
+            Plotly.downloadImage('volcano-plot', {
+                format: 'svg',
+                filename: 'volcano_plot',
+                width: 1200,
+                height: 800
+            });
+        }
+    </script>
+</body>
+</html>
