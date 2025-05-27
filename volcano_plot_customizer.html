@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧬 Volcano Plot Customizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .control-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .control-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .control-group input, .control-group select, .control-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .control-group input:focus, .control-group select:focus, .control-group textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        
+        .color-input {
+            height: 50px;
+            cursor: pointer;
+        }
+        
+        .range-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .range-group input[type="range"] {
+            flex: 1;
+        }
+        
+        .range-value {
+            background: #4facfe;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .preview-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .code-output {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+        }
+        
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+        
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧬 Volcano Plot Customizer</h1>
+            <p>Customize your volcano plot appearance and generate Python code</p>
+        </div>
+        
+        <div class="content">
+            <div class="controls-grid">
+                <!-- Plot Dimensions -->
+                <div class="control-section">
+                    <h3><span class="icon">📐</span>Plot Dimensions</h3>
+                    
+                    <div class="control-group">
+                        <label for="width">Width (inches)</label>
+                        <div class="range-group">
+                            <input type="range" id="width" min="6" max="20" value="12" step="0.5">
+                            <span class="range-value" id="width-value">12</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="height">Height (inches)</label>
+                        <div class="range-group">
+                            <input type="range" id="height" min="6" max="20" value="10" step="0.5">
+                            <span class="range-value" id="height-value">10</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="dpi">DPI (Resolution)</label>
+                        <select id="dpi">
+                            <option value="150">150 (Standard)</option>
+                            <option value="300" selected>300 (High Quality)</option>
+                            <option value="600">600 (Publication)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Colors -->
+                <div class="control-section">
+                    <h3><span class="icon">🎨</span>Colors</h3>
+                    
+                    <div class="control-group">
+                        <label for="upregulated-color">Upregulated Genes</label>
+                        <input type="color" id="upregulated-color" value="#FF4444" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="downregulated-color">Downregulated Genes</label>
+                        <input type="color" id="downregulated-color" value="#00CCCC" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="nonsignificant-color">Non-significant Genes</label>
+                        <input type="color" id="nonsignificant-color" value="#CCCCCC" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="threshold-color">Threshold Lines</label>
+                        <input type="color" id="threshold-color" value="#000000" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="background-color">Background</label>
+                        <input type="color" id="background-color" value="#FFFFFF" class="color-input">
+                    </div>
+                </div>
+                
+                <!-- Font Settings -->
+                <div class="control-section">
+                    <h3><span class="icon">🔤</span>Font Settings</h3>
+                    
+                    <div class="control-group">
+                        <label for="title-font-size">Title Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="title-font-size" min="10" max="24" value="16" step="1">
+                            <span class="range-value" id="title-font-size-value">16</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="axis-font-size">Axis Label Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="axis-font-size" min="8" max="20" value="14" step="1">
+                            <span class="range-value" id="axis-font-size-value">14</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="legend-font-size">Legend Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="legend-font-size" min="8" max="16" value="12" step="1">
+                            <span class="range-value" id="legend-font-size-value">12</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="stats-font-size">Statistics Box Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="stats-font-size" min="8" max="16" value="11" step="1">
+                            <span class="range-value" id="stats-font-size-value">11</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Point Settings -->
+                <div class="control-section">
+                    <h3><span class="icon">⚪</span>Point Settings</h3>
+                    
+                    <div class="control-group">
+                        <label for="point-size">Point Size</label>
+                        <div class="range-group">
+                            <input type="range" id="point-size" min="5" max="50" value="20" step="1">
+                            <span class="range-value" id="point-size-value">20</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="point-alpha">Point Transparency</label>
+                        <div class="range-group">
+                            <input type="range" id="point-alpha" min="0.1" max="1.0" value="0.6" step="0.1">
+                            <span class="range-value" id="point-alpha-value">0.6</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="point-border">Point Border Width</label>
+                        <div class="range-group">
+                            <input type="range" id="point-border" min="0" max="3" value="0" step="0.1">
+                            <span class="range-value" id="point-border-value">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Thresholds -->
+                <div class="control-section">
+                    <h3><span class="icon">📊</span>Significance Thresholds</h3>
+                    
+                    <div class="control-group">
+                        <label for="fc-threshold">Fold Change Threshold (log₂)</label>
+                        <div class="range-group">
+                            <input type="range" id="fc-threshold" min="0.5" max="3.0" value="1.0" step="0.1">
+                            <span class="range-value" id="fc-threshold-value">1.0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pval-threshold">P-value Threshold</label>
+                        <select id="pval-threshold">
+                            <option value="0.001">0.001</option>
+                            <option value="0.01">0.01</option>
+                            <option value="0.05" selected>0.05</option>
+                            <option value="0.1">0.1</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="threshold-line-width">Threshold Line Width</label>
+                        <div class="range-group">
+                            <input type="range" id="threshold-line-width" min="0.5" max="3.0" value="1.5" step="0.1">
+                            <span class="range-value" id="threshold-line-width-value">1.5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Title and Labels -->
+                <div class="control-section">
+                    <h3><span class="icon">📝</span>Title and Labels</h3>
+                    
+                    <div class="control-group">
+                        <label for="plot-title">Plot Title</label>
+                        <textarea id="plot-title" rows="2" placeholder="Enter custom title">Volcano Plot: All Genes (Complete Dataset)
+(MG72 vs MG24 - 17,437 genes)</textarea>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="x-label">X-axis Label</label>
+                        <input type="text" id="x-label" value="log₂(Fold Change)" placeholder="X-axis label">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="y-label">Y-axis Label</label>
+                        <input type="text" id="y-label" value="-log₁₀(P-value)" placeholder="Y-axis label">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="output-filename">Output Filename (without extension)</label>
+                        <input type="text" id="output-filename" value="custom_volcano_plot" placeholder="Filename">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generatePythonCode()">
+                    <span class="icon">🐍</span>Generate Python Code
+                </button>
+                <button class="btn btn-secondary" onclick="downloadScript()">
+                    <span class="icon">💾</span>Download Script
+                </button>
+                <button class="btn btn-secondary" onclick="resetToDefaults()">
+                    <span class="icon">🔄</span>Reset to Defaults
+                </button>
+            </div>
+            
+            <div class="preview-section">
+                <h3><span class="icon">👀</span>Generated Python Code Preview</h3>
+                <div class="code-output" id="code-output">
+                    Click "Generate Python Code" to see the customized script...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update range value displays
+        function updateRangeValue(id) {
+            const input = document.getElementById(id);
+            const valueDisplay = document.getElementById(id + '-value');
+            valueDisplay.textContent = input.value;
+        }
+
+        // Add event listeners for all range inputs
+        document.querySelectorAll('input[type="range"]').forEach(input => {
+            input.addEventListener('input', () => updateRangeValue(input.id));
+            updateRangeValue(input.id); // Initialize display
+        });
+
+        function generatePythonCode() {
+            const config = {
+                width: document.getElementById('width').value,
+                height: document.getElementById('height').value,
+                dpi: document.getElementById('dpi').value,
+                upregulatedColor: document.getElementById('upregulated-color').value,
+                downregulatedColor: document.getElementById('downregulated-color').value,
+                nonsignificantColor: document.getElementById('nonsignificant-color').value,
+                thresholdColor: document.getElementById('threshold-color').value,
+                backgroundColor: document.getElementById('background-color').value,
+                titleFontSize: document.getElementById('title-font-size').value,
+                axisFontSize: document.getElementById('axis-font-size').value,
+                legendFontSize: document.getElementById('legend-font-size').value,
+                statsFontSize: document.getElementById('stats-font-size').value,
+                pointSize: document.getElementById('point-size').value,
+                pointAlpha: document.getElementById('point-alpha').value,
+                pointBorder: document.getElementById('point-border').value,
+                fcThreshold: document.getElementById('fc-threshold').value,
+                pvalThreshold: document.getElementById('pval-threshold').value,
+                thresholdLineWidth: document.getElementById('threshold-line-width').value,
+                plotTitle: document.getElementById('plot-title').value,
+                xLabel: document.getElementById('x-label').value,
+                yLabel: document.getElementById('y-label').value,
+                outputFilename: document.getElementById('output-filename').value
+            };
+
+            const pythonCode = `#!/usr/bin/env python3
+"""
+Custom Volcano Plot Generator - Generated by Web Customizer
+=========================================================
+Customized volcano plot for MG72 vs MG24 gene expression analysis
+Generated on: ${new Date().toLocaleDateString()}
+"""
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')  # Set backend for headless operation
+
+def create_custom_volcano_plot():
+    """Create customized volcano plot with user-defined parameters."""
+    
+    # Configuration from web interface
+    config = {
+        'width': ${config.width},
+        'height': ${config.height},
+        'dpi': ${config.dpi},
+        'colors': {
+            'upregulated': '${config.upregulatedColor}',
+            'downregulated': '${config.downregulatedColor}',
+            'nonsignificant': '${config.nonsignificantColor}',
+            'threshold': '${config.thresholdColor}',
+            'background': '${config.backgroundColor}'
+        },
+        'fonts': {
+            'title': ${config.titleFontSize},
+            'axis': ${config.axisFontSize},
+            'legend': ${config.legendFontSize},
+            'stats': ${config.statsFontSize}
+        },
+        'points': {
+            'size': ${config.pointSize},
+            'alpha': ${config.pointAlpha},
+            'border': ${config.pointBorder}
+        },
+        'thresholds': {
+            'fc': ${config.fcThreshold},
+            'pval': ${config.pvalThreshold},
+            'line_width': ${config.thresholdLineWidth}
+        },
+        'labels': {
+            'title': """${config.plotTitle}""",
+            'x': '${config.xLabel}',
+            'y': '${config.yLabel}'
+        },
+        'output_filename': '${config.outputFilename}'
+    }
+    
+    print("🧬 Custom Volcano Plot Generator")
+    print("=" * 50)
+    
+    # Load data
+    print("📂 Loading Excel file...")
+    file_path = 'Data for Making Graph/MG72VSMG24_Gene_differential_expression.xlsx'
+    
+    try:
+        df = pd.read_excel(file_path)
+        print(f"✅ Loaded {len(df):,} genes from Excel file")
+    except Exception as e:
+        print(f"❌ Error loading data: {e}")
+        return None
+    
+    # Prepare data
+    print("🧹 Preparing data...")
+    data = df[['gene_name', 'log2(fc)', 'pval']].copy()
+    data = data.dropna(subset=['log2(fc)', 'pval'])
+    print(f"✅ Clean dataset: {len(data):,} genes")
+    
+    # Handle zero p-values and calculate -log10(p-value)
+    data['pval_adj'] = data['pval'].replace(0, 1e-300)
+    data['-log10(pval)'] = -np.log10(data['pval_adj'])
+    
+    # Categorize genes based on thresholds
+    data['category'] = 'Not Significant'
+    upregulated = (data['log2(fc)'] >= config['thresholds']['fc']) & (data['pval'] <= config['thresholds']['pval'])
+    downregulated = (data['log2(fc)'] <= -config['thresholds']['fc']) & (data['pval'] <= config['thresholds']['pval'])
+    
+    data.loc[upregulated, 'category'] = 'Upregulated'
+    data.loc[downregulated, 'category'] = 'Downregulated'
+    
+    # Count categories
+    stats = data['category'].value_counts()
+    print(f"📊 Gene Categories:")
+    print(f"   • Upregulated: {stats.get('Upregulated', 0):,}")
+    print(f"   • Downregulated: {stats.get('Downregulated', 0):,}")
+    print(f"   • Not Significant: {stats.get('Not Significant', 0):,}")
+    
+    # Create the plot
+    print("🎨 Creating custom volcano plot...")
+    plt.style.use('default')
+    fig, ax = plt.subplots(figsize=(config['width'], config['height']))
+    fig.patch.set_facecolor(config['colors']['background'])
+    ax.set_facecolor(config['colors']['background'])
+    
+    # Plot points by category
+    for category in ['Not Significant', 'Downregulated', 'Upregulated']:
+        subset = data[data['category'] == category]
+        if not subset.empty:
+            alpha = config['points']['alpha'] if category != 'Not Significant' else config['points']['alpha'] * 0.7
+            size = config['points']['size'] if category != 'Not Significant' else config['points']['size'] * 0.8
+            
+            ax.scatter(subset['log2(fc)'], subset['-log10(pval)'], 
+                      c=config['colors'][category.lower().replace(' ', '')], 
+                      alpha=alpha, s=size, label=category, 
+                      edgecolors='black' if config['points']['border'] > 0 else 'none',
+                      linewidths=config['points']['border'])
+    
+    # Add threshold lines
+    ax.axvline(x=config['thresholds']['fc'], color=config['colors']['threshold'], 
+               linestyle='--', alpha=0.7, linewidth=config['thresholds']['line_width'])
+    ax.axvline(x=-config['thresholds']['fc'], color=config['colors']['threshold'], 
+               linestyle='--', alpha=0.7, linewidth=config['thresholds']['line_width'])
+    ax.axhline(y=-np.log10(config['thresholds']['pval']), color=config['colors']['threshold'], 
+               linestyle='--', alpha=0.7, linewidth=config['thresholds']['line_width'])
+    
+    # Customize labels and title
+    ax.set_xlabel(config['labels']['x'], fontsize=config['fonts']['axis'], fontweight='bold')
+    ax.set_ylabel(config['labels']['y'], fontsize=config['fonts']['axis'], fontweight='bold')
+    ax.set_title(config['labels']['title'], fontsize=config['fonts']['title'], fontweight='bold', pad=20)
+    
+    # Add grid
+    ax.grid(True, alpha=0.3, linestyle='-', linewidth=0.5)
+    
+    # Add legend
+    legend = ax.legend(loc='upper right', frameon=True, fancybox=True, shadow=True, 
+                      fontsize=config['fonts']['legend'])
+    legend.get_frame().set_facecolor('white')
+    legend.get_frame().set_alpha(0.9)
+    
+    # Add statistics text box
+    total_genes = len(data)
+    upregulated_count = stats.get('Upregulated', 0)
+    downregulated_count = stats.get('Downregulated', 0)
+    not_significant_count = stats.get('Not Significant', 0)
+    
+    stats_text = f"""Dataset Statistics:
+Total genes: {total_genes:,}
+Upregulated: {upregulated_count:,} ({upregulated_count/total_genes*100:.1f}%)
+Downregulated: {downregulated_count:,} ({downregulated_count/total_genes*100:.1f}%)
+Not significant: {not_significant_count:,} ({not_significant_count/total_genes*100:.1f}%)
+
+Significance Thresholds:
+|log₂(FC)| ≥ {config['thresholds']['fc']}
+p-value ≤ {config['thresholds']['pval']}"""
+    
+    ax.text(0.02, 0.98, stats_text, transform=ax.transAxes, fontsize=config['fonts']['stats'],
+            verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.9))
+    
+    # Set axis limits with padding
+    x_min, x_max = data['log2(fc)'].min(), data['log2(fc)'].max()
+    y_max = data['-log10(pval)'].max()
+    
+    ax.set_xlim(x_min - 0.5, x_max + 0.5)
+    ax.set_ylim(-0.5, y_max + 5)
+    
+    # Improve layout
+    plt.tight_layout()
+    
+    # Save plots
+    print("💾 Saving custom volcano plot...")
+    png_file = f"{config['output_filename']}.png"
+    pdf_file = f"{config['output_filename']}.pdf"
+    
+    plt.savefig(png_file, dpi=config['dpi'], bbox_inches='tight', facecolor=config['colors']['background'])
+    plt.savefig(pdf_file, bbox_inches='tight', facecolor=config['colors']['background'])
+    
+    print(f"✅ Saved PNG: {png_file}")
+    print(f"✅ Saved PDF: {pdf_file}")
+    
+    # Close plot to free memory
+    plt.close(fig)
+    
+    print("\\n🎉 Custom volcano plot generation completed!")
+    print(f"\\n📈 Summary:")
+    print(f"   • Total genes analyzed: {total_genes:,}")
+    print(f"   • Significantly upregulated: {upregulated_count:,}")
+    print(f"   • Significantly downregulated: {downregulated_count:,}")
+    print(f"   • Total significant genes: {upregulated_count + downregulated_count:,}")
+    print(f"   • Percentage significant: {((upregulated_count + downregulated_count)/total_genes)*100:.1f}%")
+    
+    return data
+
+if __name__ == "__main__":
+    result = create_custom_volcano_plot()
+    if result is not None:
+        print("\\n✅ Custom volcano plot analysis completed successfully!")
+    else:
+        print("\\n❌ Custom volcano plot analysis failed!")`;
+
+            document.getElementById('code-output').textContent = pythonCode;
+            window.generatedCode = pythonCode; // Store for download
+        }
+
+        function downloadScript() {
+            if (!window.generatedCode) {
+                alert('Please generate Python code first!');
+                return;
+            }
+            
+            const filename = document.getElementById('output-filename').value || 'custom_volcano_plot';
+            const blob = new Blob([window.generatedCode], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}.py`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function resetToDefaults() {
+            // Reset all form elements to default values
+            document.getElementById('width').value = 12;
+            document.getElementById('height').value = 10;
+            document.getElementById('dpi').value = 300;
+            document.getElementById('upregulated-color').value = '#FF4444';
+            document.getElementById('downregulated-color').value = '#00CCCC';
+            document.getElementById('nonsignificant-color').value = '#CCCCCC';
+            document.getElementById('threshold-color').value = '#000000';
+            document.getElementById('background-color').value = '#FFFFFF';
+            document.getElementById('title-font-size').value = 16;
+            document.getElementById('axis-font-size').value = 14;
+            document.getElementById('legend-font-size').value = 12;
+            document.getElementById('stats-font-size').value = 11;
+            document.getElementById('point-size').value = 20;
+            document.getElementById('point-alpha').value = 0.6;
+            document.getElementById('point-border').value = 0;
+            document.getElementById('fc-threshold').value = 1.0;
+            document.getElementById('pval-threshold').value = 0.05;
+            document.getElementById('threshold-line-width').value = 1.5;
+            document.getElementById('plot-title').value = 'Volcano Plot: All Genes (Complete Dataset)\\n(MG72 vs MG24 - 17,437 genes)';
+            document.getElementById('x-label').value = 'log₂(Fold Change)';
+            document.getElementById('y-label').value = '-log₁₀(P-value)';
+            document.getElementById('output-filename').value = 'custom_volcano_plot';
+            
+            // Update all range displays
+            document.querySelectorAll('input[type="range"]').forEach(input => {
+                updateRangeValue(input.id);
+            });
+            
+            // Clear code output
+            document.getElementById('code-output').textContent = 'Click "Generate Python Code" to see the customized script...';
+        }
+
+        // Initialize range displays on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('input[type="range"]').forEach(input => {
+                updateRangeValue(input.id);
+            });
+        });
+    </script>
+</body>
+</html>
