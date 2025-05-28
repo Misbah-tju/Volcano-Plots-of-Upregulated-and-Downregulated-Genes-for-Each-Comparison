@@ -1007,25 +1007,23 @@
                     </div>
                     
                     <div class="control-group" id="custom-legend-position" style="display: none;">
-                        <label>Custom Legend Position</label>
-                        <div style="display: flex; gap: 10px;">
+                        <label>Custom Legend Position</label>                        <div style="display: flex; gap: 10px;">
                             <div style="flex: 1;">
                                 <label for="legend-x" style="font-size: 0.8rem;">X Position</label>
                                 <div class="range-group">
-                                    <input type="range" id="legend-x" min="0" max="1.5" value="1.02" step="0.02">
+                                    <input type="range" id="legend-x" min="-0.5" max="2" value="1.02" step="0.02">
                                     <span class="range-value" id="legend-x-value">1.02</span>
                                 </div>
                             </div>
                             <div style="flex: 1;">
                                 <label for="legend-y" style="font-size: 0.8rem;">Y Position</label>
                                 <div class="range-group">
-                                    <input type="range" id="legend-y" min="0" max="1" value="1" step="0.05">
+                                    <input type="range" id="legend-y" min="-0.2" max="1.5" value="1" step="0.05">
                                     <span class="range-value" id="legend-y-value">1</span>
                                 </div>
                             </div>
-                        </div>
-                        <small style="color: #6c757d; font-size: 0.8rem;">
-                            <i class="fas fa-info-circle"></i> X: 0 = left edge, 1 = right edge, >1 = outside right. Y: 0 = bottom, 1 = top
+                        </div>                        <small style="color: #6c757d; font-size: 0.8rem;">
+                            <i class="fas fa-info-circle"></i> X: -0.5 to 2 (negative = outside left, 0 = left edge, 1 = right edge, >1 = outside right). Y: -0.2 to 1.5 (negative = below plot, 0 = bottom, 1 = top, >1 = above plot)
                         </small>
                     </div>
                     
