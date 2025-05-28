@@ -1005,8 +1005,7 @@
                             <option value="custom">Custom Position</option>
                         </select>
                     </div>
-                    
-                    <div class="control-group" id="custom-legend-position" style="display: none;">
+                      <div class="control-group" id="custom-legend-position" style="display: none;">
                         <label>Custom Legend Position</label>                        <div style="display: flex; gap: 10px;">
                             <div style="flex: 1;">
                                 <label for="legend-x" style="font-size: 0.8rem;">X Position</label>
@@ -1014,6 +1013,8 @@
                                     <input type="range" id="legend-x" min="-0.5" max="2" value="1.02" step="0.02">
                                     <span class="range-value" id="legend-x-value">1.02</span>
                                 </div>
+                                <input type="number" id="legend-x-input" min="-0.5" max="2" value="1.02" step="0.02" 
+                                       style="width: 100%; margin-top: 5px; padding: 4px; font-size: 0.85rem; border: 1px solid #ddd; border-radius: 3px;">
                             </div>
                             <div style="flex: 1;">
                                 <label for="legend-y" style="font-size: 0.8rem;">Y Position</label>
@@ -1021,6 +1022,8 @@
                                     <input type="range" id="legend-y" min="-0.2" max="1.5" value="1" step="0.05">
                                     <span class="range-value" id="legend-y-value">1</span>
                                 </div>
+                                <input type="number" id="legend-y-input" min="-0.2" max="1.5" value="1" step="0.05" 
+                                       style="width: 100%; margin-top: 5px; padding: 4px; font-size: 0.85rem; border: 1px solid #ddd; border-radius: 3px;">
                             </div>
                         </div>                        <small style="color: #6c757d; font-size: 0.8rem;">
                             <i class="fas fa-info-circle"></i> X: -0.5 to 2 (negative = outside left, 0 = left edge, 1 = right edge, >1 = outside right). Y: -0.2 to 1.5 (negative = below plot, 0 = bottom, 1 = top, >1 = above plot)
@@ -1359,8 +1362,7 @@
             
             return settings;
         }
-        
-        function applyControlSettings(settings) {
+          function applyControlSettings(settings) {
             Object.keys(settings).forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
@@ -1383,6 +1385,11 @@
             // Update title position controls if needed
             if (typeof updateTitlePositionControls === 'function') {
                 updateTitlePositionControls();
+            }
+            
+            // Update legend position controls if needed
+            if (typeof updateLegendPositionControls === 'function') {
+                updateLegendPositionControls();
             }
         }
           function toggleSettingsLock() {
@@ -2160,16 +2167,24 @@
             
             updateLegendPositionControls();
             if (isDataLoaded) updatePlot();
-        }
-          // Function to update legend position controls visibility
+        }        // Function to update legend position controls visibility
         function updateLegendPositionControls() {
             const legendPosition = document.getElementById('legend-position').value;
             const customControls = document.getElementById('custom-legend-position');
             
+            console.log('Legend position:', legendPosition);
+            console.log('Custom controls element:', customControls);
+            
             if (legendPosition === 'custom') {
                 customControls.style.display = 'block';
+                console.log('Showing custom controls');
+                
+                // Sync number inputs with sliders
+                document.getElementById('legend-x-input').value = document.getElementById('legend-x').value;
+                document.getElementById('legend-y-input').value = document.getElementById('legend-y').value;
             } else {
                 customControls.style.display = 'none';
+                console.log('Hiding custom controls');
             }
         }
 
@@ -2475,12 +2490,35 @@
         });        // Add event listeners for custom legend position sliders
         document.getElementById('legend-x').addEventListener('input', () => {
             updateRangeValue('legend-x');
+            // Sync with number input
+            document.getElementById('legend-x-input').value = document.getElementById('legend-x').value;
             if (isDataLoaded) updatePlot();
         });
 
         document.getElementById('legend-y').addEventListener('input', () => {
             updateRangeValue('legend-y');
+            // Sync with number input
+            document.getElementById('legend-y-input').value = document.getElementById('legend-y').value;
             if (isDataLoaded) updatePlot();
+        });
+
+        // Add event listeners for custom legend position number inputs
+        document.getElementById('legend-x-input').addEventListener('input', () => {
+            const value = parseFloat(document.getElementById('legend-x-input').value);
+            if (!isNaN(value)) {
+                document.getElementById('legend-x').value = value;
+                updateRangeValue('legend-x');
+                if (isDataLoaded) updatePlot();
+            }
+        });
+
+        document.getElementById('legend-y-input').addEventListener('input', () => {
+            const value = parseFloat(document.getElementById('legend-y-input').value);
+            if (!isNaN(value)) {
+                document.getElementById('legend-y').value = value;
+                updateRangeValue('legend-y');
+                if (isDataLoaded) updatePlot();
+            }
         });
 
         // Add event listeners for legend border controls
