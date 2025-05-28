@@ -1703,14 +1703,12 @@
                     x: downregulated.map(d => d.logFC),
                     y: downregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Downregulated (${downregulated.length.toLocaleString()})`,
+                    type: 'scatter',
+                    name: `Downregulated (${downregulated.length.toLocaleString()})`,
                     marker: {
                         color: downColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: {
-                            width: legendDotThickness
-                        }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: downregulated.map(d => d.gene)
@@ -1719,14 +1717,12 @@
                     x: upregulated.map(d => d.logFC),
                     y: upregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Upregulated (${upregulated.length.toLocaleString()})`,
+                    type: 'scatter',
+                    name: `Upregulated (${upregulated.length.toLocaleString()})`,
                     marker: {
                         color: upColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: {
-                            width: legendDotThickness
-                        }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: upregulated.map(d => d.gene)
@@ -2201,40 +2197,37 @@
                 customControls.style.display = 'none';
                 console.log('Hiding custom controls');
             }
-        }        // Function to set legend box border presets
+        }
+
+        // Function to set legend box border presets
         function setLegendBoxPreset(preset) {
             const backgroundColor = document.getElementById('legend-background-color');
             const backgroundOpacity = document.getElementById('legend-background-opacity');
             const borderColor = document.getElementById('legend-border-color');
             const borderWidth = document.getElementById('legend-border-width');
-            const dotThickness = document.getElementById('legend-dot-thickness');
             
             switch(preset) {
                 case 'transparent':
                     backgroundOpacity.value = '0';
                     borderWidth.value = '0';
-                    dotThickness.value = '0';
                     break;
                 case 'subtle':
                     backgroundColor.value = '#ffffff';
                     backgroundOpacity.value = '0.8';
                     borderColor.value = '#e0e0e0';
                     borderWidth.value = '1';
-                    dotThickness.value = '1';
                     break;
                 case 'bold':
                     backgroundColor.value = '#ffffff';
                     backgroundOpacity.value = '1';
                     borderColor.value = '#000000';
                     borderWidth.value = '2';
-                    dotThickness.value = '2';
                     break;
             }
             
             // Update display values
             updateRangeValue('legend-background-opacity');
             updateRangeValue('legend-border-width');
-            updateRangeValue('legend-dot-thickness');
             if (isDataLoaded) updatePlot();
         }
 
@@ -2551,13 +2544,10 @@
 
         document.getElementById('legend-border-color').addEventListener('change', () => {
             if (isDataLoaded) updatePlot();
-        });        document.getElementById('legend-border-width').addEventListener('input', () => {
-            updateRangeValue('legend-border-width');
-            if (isDataLoaded) updatePlot();
         });
 
-        document.getElementById('legend-dot-thickness').addEventListener('input', () => {
-            updateRangeValue('legend-dot-thickness');
+        document.getElementById('legend-border-width').addEventListener('input', () => {
+            updateRangeValue('legend-border-width');
             if (isDataLoaded) updatePlot();
         });
 
@@ -2737,10 +2727,10 @@
         updateRangeValue('y-tick-spacing');
         updateRangeValue('grid-width');
         updateRangeValue('box-border-width');
-        updateRangeValue('box-border-radius');        updateRangeValue('legend-x');        updateRangeValue('legend-y');
+        updateRangeValue('box-border-radius');        updateRangeValue('legend-x');
+        updateRangeValue('legend-y');
         updateRangeValue('legend-background-opacity');
         updateRangeValue('legend-border-width');
-        updateRangeValue('legend-dot-thickness');
 
           // Initialize title position controls
         updateTitlePositionControls();
