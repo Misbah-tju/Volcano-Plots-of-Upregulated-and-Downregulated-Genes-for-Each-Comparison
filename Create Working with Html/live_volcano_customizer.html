@@ -399,8 +399,7 @@
         .hidden {
             display: none;
         }
-        
-        .data-preview {
+          .data-preview {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
             border-radius: 5px;
@@ -410,6 +409,56 @@
             font-size: 12px;
             max-height: 200px;
             overflow-y: auto;
+        }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 280px;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -140px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 13px;
+            line-height: 1.4;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Responsive tooltip positioning */
+        @media (max-width: 768px) {
+            .tooltip .tooltiptext {
+                width: 220px;
+                margin-left: -110px;
+            }
         }
     </style>
 </head>
@@ -424,15 +473,31 @@
             </div>
             <button class="sample-data-btn" onclick="loadSampleData()">
                 <i class="fas fa-flask"></i>Use Sample Data
-            </button>
-            
-            <div class="settings-lock-section">
-                <button class="settings-lock-btn" id="lock-settings-btn" onclick="toggleSettingsLock()">
-                    <i class="fas fa-lock"></i> Lock Current Settings
-                </button>
-                <button class="settings-lock-btn clear" id="clear-settings-btn" onclick="clearLockedSettings()" style="display: none;">
-                    <i class="fas fa-unlock"></i> Clear Locked Settings
-                </button>
+            </button>            <div class="settings-lock-section">
+                <h4 style="margin: 0 0 10px 0; color: #495057; font-size: 14px;">
+                    <i class="fas fa-cog"></i> Settings Memory
+                </h4>
+                <p style="margin: 0 0 15px 0; font-size: 12px; color: #6c757d; line-height: 1.4;">
+                    Save your current styling preferences to automatically apply them to future datasets. No more manual readjustment!
+                </p>
+                <div class="tooltip">
+                    <button class="settings-lock-btn" id="lock-settings-btn" onclick="toggleSettingsLock()">
+                        <i class="fas fa-lock"></i> Lock Current Settings
+                    </button>
+                    <span class="tooltiptext">
+                        <strong>Save Your Styling Preferences</strong><br>
+                        Click to capture all current control values (colors, sizes, thresholds, labels, etc.) and automatically apply them to new datasets. Perfect for creating multiple volcano plots with consistent styling!
+                    </span>
+                </div>
+                <div class="tooltip">
+                    <button class="settings-lock-btn clear" id="clear-settings-btn" onclick="clearLockedSettings()" style="display: none;">
+                        <i class="fas fa-unlock"></i> Clear Locked Settings
+                    </button>
+                    <span class="tooltiptext">
+                        <strong>Remove Saved Settings</strong><br>
+                        Permanently delete your locked styling preferences. After clicking this, new datasets will load with default settings instead of your saved preferences.
+                    </span>
+                </div>
                 <div class="settings-status" id="settings-status">
                     <i class="fas fa-check-circle"></i> Settings locked! New data will use these styling preferences.
                 </div>
@@ -923,17 +988,76 @@
                         </select>
                     </div>
                     
-                    <div class="control-group">                        <div style="display: flex; gap: 5px;">
-                            <button class="btn btn-secondary" onclick="setTypographyPreset('minimal')" style="flex: 1;">
-                                <i class="fas fa-font"></i>Minimal
+                    <div class="control-group">
+                        <label for="legend-position">Legend Position</label>
+                        <select id="legend-position">
+                            <option value="outside right" selected>Outside Right</option>
+                            <option value="inside top-right">Inside Top-Right</option>
+                            <option value="inside top-left">Inside Top-Left</option>
+                            <option value="inside bottom-right">Inside Bottom-Right</option>
+                            <option value="inside bottom-left">Inside Bottom-Left</option>
+                            <option value="outside top">Outside Top</option>
+                            <option value="outside bottom">Outside Bottom</option>
+                            <option value="outside left">Outside Left</option>
+                            <option value="custom">Custom Position</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group" id="custom-legend-position" style="display: none;">
+                        <label>Custom Legend Position</label>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="flex: 1;">
+                                <label for="legend-x" style="font-size: 0.8rem;">X Position</label>
+                                <div class="range-group">
+                                    <input type="range" id="legend-x" min="0" max="1.5" value="1.02" step="0.02">
+                                    <span class="range-value" id="legend-x-value">1.02</span>
+                                </div>
+                            </div>
+                            <div style="flex: 1;">
+                                <label for="legend-y" style="font-size: 0.8rem;">Y Position</label>
+                                <div class="range-group">
+                                    <input type="range" id="legend-y" min="0" max="1" value="1" step="0.05">
+                                    <span class="range-value" id="legend-y-value">1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <small style="color: #6c757d; font-size: 0.8rem;">
+                            <i class="fas fa-info-circle"></i> X: 0 = left edge, 1 = right edge, >1 = outside right. Y: 0 = bottom, 1 = top
+                        </small>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Legend Position Presets</label>
+                        <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                            <button class="btn btn-secondary" onclick="setLegendPositionPreset('top-right')" style="flex: 1; min-width: 90px;">
+                                <i class="fas fa-arrow-up"></i><i class="fas fa-arrow-right"></i>Top-R
                             </button>
-                            <button class="btn btn-secondary" onclick="setTypographyPreset('standard')" style="flex: 1;">
-                                <i class="fas fa-text-height"></i>Standard
+                            <button class="btn btn-secondary" onclick="setLegendPositionPreset('top-left')" style="flex: 1; min-width: 90px;">
+                                <i class="fas fa-arrow-up"></i><i class="fas fa-arrow-left"></i>Top-L
                             </button>
-                            <button class="btn btn-secondary" onclick="setTypographyPreset('bold')" style="flex: 1;">
-                                <i class="fas fa-bold"></i>Bold
+                            <button class="btn btn-secondary" onclick="setLegendPositionPreset('bottom-right')" style="flex: 1; min-width: 90px;">
+                                <i class="fas fa-arrow-down"></i><i class="fas fa-arrow-right"></i>Bot-R
                             </button>
                         </div>
+                        <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px;">
+                            <button class="btn btn-secondary" onclick="setLegendPositionPreset('bottom-left')" style="flex: 1; min-width: 90px;">
+                                <i class="fas fa-arrow-down"></i><i class="fas fa-arrow-left"></i>Bot-L
+                            </button>
+                            <button class="btn btn-secondary" onclick="setLegendPositionPreset('outside-right')" style="flex: 1; min-width: 90px;">
+                                <i class="fas fa-external-link-alt"></i>Out-R
+                            </button>
+                            <button class="btn btn-secondary" onclick="setLegendPositionPreset('center')" style="flex: 1; min-width: 90px;">
+                                <i class="fas fa-crosshairs"></i>Center
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="legend-orientation">Legend Orientation</label>
+                        <select id="legend-orientation">
+                            <option value="v" selected>Vertical</option>
+                            <option value="h">Horizontal</option>
+                        </select>
                     </div>
                 </div>
                   <!-- Export Options -->
@@ -1213,11 +1337,11 @@
                 updateTitlePositionControls();
             }
         }
-        
-        function toggleSettingsLock() {
+          function toggleSettingsLock() {
             const lockBtn = document.getElementById('lock-settings-btn');
             const clearBtn = document.getElementById('clear-settings-btn');
             const statusDiv = document.getElementById('settings-status');
+            const lockTooltip = lockBtn.parentElement.querySelector('.tooltiptext');
             
             if (!isSettingsLocked) {
                 // Lock settings
@@ -1228,6 +1352,12 @@
                 lockBtn.classList.add('locked');
                 clearBtn.style.display = 'inline-block';
                 statusDiv.classList.add('locked');
+                
+                // Update tooltip text for locked state
+                lockTooltip.innerHTML = `
+                    <strong>Settings Currently Locked</strong><br>
+                    Your styling preferences are saved and will automatically apply to new datasets. Click to temporarily unlock (settings remain saved) or use "Clear" to permanently remove.
+                `;
                 
                 // Save to localStorage for persistence
                 localStorage.setItem('volcanoPlotLockedSettings', JSON.stringify(lockedSettings));
@@ -1240,28 +1370,39 @@
                 lockBtn.innerHTML = '<i class="fas fa-lock"></i> Lock Current Settings';
                 lockBtn.classList.remove('locked');
                 statusDiv.classList.remove('locked');
+                
+                // Update tooltip text for unlocked state
+                lockTooltip.innerHTML = `
+                    <strong>Save Your Styling Preferences</strong><br>
+                    Click to capture all current control values (colors, sizes, thresholds, labels, etc.) and automatically apply them to new datasets. Perfect for creating multiple volcano plots with consistent styling!
+                `;
             }
         }
-        
-        function clearLockedSettings() {
+          function clearLockedSettings() {
             lockedSettings = null;
             isSettingsLocked = false;
             
             const lockBtn = document.getElementById('lock-settings-btn');
             const clearBtn = document.getElementById('clear-settings-btn');
             const statusDiv = document.getElementById('settings-status');
+            const lockTooltip = lockBtn.parentElement.querySelector('.tooltiptext');
             
             lockBtn.innerHTML = '<i class="fas fa-lock"></i> Lock Current Settings';
             lockBtn.classList.remove('locked');
             clearBtn.style.display = 'none';
             statusDiv.classList.remove('locked');
             
+            // Reset tooltip text to default
+            lockTooltip.innerHTML = `
+                <strong>Save Your Styling Preferences</strong><br>
+                Click to capture all current control values (colors, sizes, thresholds, labels, etc.) and automatically apply them to new datasets. Perfect for creating multiple volcano plots with consistent styling!
+            `;
+            
             // Remove from localStorage
             localStorage.removeItem('volcanoPlotLockedSettings');
             localStorage.removeItem('volcanoPlotSettingsLocked');
         }
-        
-        function loadLockedSettingsFromStorage() {
+          function loadLockedSettingsFromStorage() {
             const savedSettings = localStorage.getItem('volcanoPlotLockedSettings');
             const settingsLocked = localStorage.getItem('volcanoPlotSettingsLocked');
             
@@ -1272,11 +1413,18 @@
                 const lockBtn = document.getElementById('lock-settings-btn');
                 const clearBtn = document.getElementById('clear-settings-btn');
                 const statusDiv = document.getElementById('settings-status');
+                const lockTooltip = lockBtn.parentElement.querySelector('.tooltiptext');
                 
                 lockBtn.innerHTML = '<i class="fas fa-lock"></i> Settings Locked';
                 lockBtn.classList.add('locked');
                 clearBtn.style.display = 'inline-block';
                 statusDiv.classList.add('locked');
+                
+                // Set tooltip text for locked state
+                lockTooltip.innerHTML = `
+                    <strong>Settings Currently Locked</strong><br>
+                    Your styling preferences are saved and will automatically apply to new datasets. Click to temporarily unlock (settings remain saved) or use "Clear" to permanently remove.
+                `;
             }
         }
         
@@ -1569,6 +1717,8 @@
                     showgrid: gridEnabled,
                     gridcolor: gridColor,
                     gridwidth: gridWidth,
+                                      
+                                                                                                                                            
                     showline: axisLinesEnabled,
                     linecolor: axisLineColor,
                     linewidth: axisLineWidth,
@@ -1596,8 +1746,7 @@
                     tickwidth: tickWidth,
                     tickcolor: axisLineColor,
                     dtick: autoTickSpacing ? null : yTickSpacing
-                },
-                plot_bgcolor: 'white',
+                },                plot_bgcolor: 'white',
                 paper_bgcolor: 'white',
                 legend: {
                     x: 1.02,
@@ -1612,6 +1761,72 @@
 
             // Apply enhanced typography
             layout = updatePlotTypography(layout);
+
+            // Handle custom legend positioning
+            const legendPosition = document.getElementById('legend-position').value;
+            const legendOrientation = document.getElementById('legend-orientation').value;
+            
+            if (legendPosition === 'custom') {
+                const legendX = parseFloat(document.getElementById('legend-x').value);
+                const legendY = parseFloat(document.getElementById('legend-y').value);
+                layout.legend.x = legendX;
+                layout.legend.y = legendY;
+            } else {
+                // Handle preset legend positions
+                switch(legendPosition) {
+                    case 'inside top-right':
+                        layout.legend.x = 0.98;
+                        layout.legend.y = 0.98;
+                        layout.legend.xanchor = 'right';
+                        layout.legend.yanchor = 'top';
+                        break;
+                    case 'inside top-left':
+                        layout.legend.x = 0.02;
+                        layout.legend.y = 0.98;
+                        layout.legend.xanchor = 'left';
+                        layout.legend.yanchor = 'top';
+                        break;
+                    case 'inside bottom-right':
+                        layout.legend.x = 0.98;
+                        layout.legend.y = 0.02;
+                        layout.legend.xanchor = 'right';
+                        layout.legend.yanchor = 'bottom';
+                        break;
+                    case 'inside bottom-left':
+                        layout.legend.x = 0.02;
+                        layout.legend.y = 0.02;
+                        layout.legend.xanchor = 'left';
+                        layout.legend.yanchor = 'bottom';
+                        break;
+                    case 'outside top':
+                        layout.legend.x = 0.5;
+                        layout.legend.y = 1.1;
+                        layout.legend.xanchor = 'center';
+                        layout.legend.yanchor = 'bottom';
+                        break;
+                    case 'outside bottom':
+                        layout.legend.x = 0.5;
+                        layout.legend.y = -0.1;
+                        layout.legend.xanchor = 'center';
+                        layout.legend.yanchor = 'top';
+                        break;
+                    case 'outside left':
+                        layout.legend.x = -0.1;
+                        layout.legend.y = 0.5;
+                        layout.legend.xanchor = 'right';
+                        layout.legend.yanchor = 'middle';
+                        break;
+                    default: // 'outside right'
+                        layout.legend.x = 1.02;
+                        layout.legend.y = 1;
+                        layout.legend.xanchor = 'left';
+                        layout.legend.yanchor = 'top';
+                        break;
+                }
+            }
+            
+            // Set legend orientation
+            layout.legend.orientation = legendOrientation;
 
             // Handle custom title positioning
             const titlePosition = document.getElementById('title-position').value;
@@ -1826,7 +2041,55 @@
             updateRangeValue('grid-width');
             if (isDataLoaded) updatePlot();
         }
-          // Helper function to set typography presets
+        
+        // Helper function to set legend position presets
+        function setLegendPositionPreset(preset) {
+            const legendPosition = document.getElementById('legend-position');
+            const legendX = document.getElementById('legend-x');
+            const legendY = document.getElementById('legend-y');
+            
+            switch(preset) {
+                case 'top-right':
+                    legendPosition.value = 'inside top-right';
+                    break;
+                case 'top-left':
+                    legendPosition.value = 'inside top-left';
+                    break;
+                case 'bottom-right':
+                    legendPosition.value = 'inside bottom-right';
+                    break;
+                case 'bottom-left':
+                    legendPosition.value = 'inside bottom-left';
+                    break;
+                case 'outside-right':
+                    legendPosition.value = 'outside right';
+                    break;
+                case 'center':
+                    legendPosition.value = 'custom';
+                    legendX.value = '0.5';
+                    legendY.value = '0.5';
+                    updateRangeValue('legend-x');
+                    updateRangeValue('legend-y');
+                    break;
+            }
+            
+            updateLegendPositionControls();
+            if (isDataLoaded) updatePlot();
+        }
+        
+        // Function to update legend position controls visibility
+        function updateLegendPositionControls() {
+            const legendPosition = document.getElementById('legend-position').value;
+            const customControls = document.getElementById('custom-legend-position');
+            
+            if (legendPosition === 'custom') {
+                customControls.style.display = 'block';
+            } else {
+                customControls.style.display = 'none';
+            }
+        }
+
+        // Helper function to set typography presets
         function setTypographyPreset(preset) {
             const titleFontSize = document.getElementById('title-font-size');
             const titleFontWeight = document.getElementById('title-font-weight');
@@ -2087,6 +2350,27 @@
             if (isDataLoaded) updatePlot();
         });
 
+        // Initialize legend positioning controls event listeners
+        document.getElementById('legend-position').addEventListener('change', () => {
+            updateLegendPositionControls();
+            if (isDataLoaded) updatePlot();
+        });
+
+        document.getElementById('legend-orientation').addEventListener('change', () => {
+            if (isDataLoaded) updatePlot();
+        });
+
+        // Add event listeners for custom legend position sliders
+        document.getElementById('legend-x').addEventListener('input', () => {
+            updateRangeValue('legend-x');
+            if (isDataLoaded) updatePlot();
+        });
+
+        document.getElementById('legend-y').addEventListener('input', () => {
+            updateRangeValue('legend-y');
+            if (isDataLoaded) updatePlot();
+        });
+
         // Add event listeners for all new typography controls
         ['title-font-style', 'title-text-decoration', 'title-font-family', 
          'axis-label-font-style', 'axis-label-font-family', 'axis-label-color',
@@ -2264,8 +2548,14 @@
         updateRangeValue('grid-width');
         updateRangeValue('box-border-width');
         updateRangeValue('box-border-radius');
+        updateRangeValue('legend-x');
+        updateRangeValue('legend-y');
+
           // Initialize title position controls
         updateTitlePositionControls();
+        
+        // Initialize legend position controls
+        updateLegendPositionControls();
         
         // Initialize X-axis controls
         updateXAxisControls();
