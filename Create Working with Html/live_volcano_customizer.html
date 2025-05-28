@@ -1096,12 +1096,17 @@
         let dataColumns = null;
         let lockedSettings = null;
         let isSettingsLocked = false;
-        
-        // Handle Excel file upload
+        let uploadedFileName = 'volcano_plot'; // Store the base filename for downloads
+          // Handle Excel file upload
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-              const statusDiv = document.getElementById('file-status');
+            
+            // Extract base filename (without extension) for downloads
+            const baseFileName = file.name.replace(/\.[^/.]+$/, "");
+            uploadedFileName = baseFileName || 'volcano_plot';
+            
+            const statusDiv = document.getElementById('file-status');
             statusDiv.innerHTML = '<div class="status-message"><i class="fas fa-upload"></i> Reading Excel file...</div>';
             
             const reader = new FileReader();
@@ -1606,11 +1611,12 @@
             
             // Update stats with hidden count information
             updateStats(stats, hiddenCount, yAxisMax);
-            
-            // Separate filtered data by category
+              // Separate filtered data by category
             const upregulated = filteredData.filter(d => d.category === 'upregulated');
             const downregulated = filteredData.filter(d => d.category === 'downregulated');
             const nonsignificant = filteredData.filter(d => d.category === 'nonsignificant');
+              // Calculate total count for legend
+            const totalGenes = filteredData.length;
             
             // Performance optimization: subsample non-significant points if too many
             const maxNSPoints = 8000;
@@ -1622,7 +1628,9 @@
                     x: sampleNS.map(d => d.logFC),
                     y: sampleNS.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Non-significant (${nonsignificant.length.toLocaleString()})`,                    marker: {
+                    type: 'scatter',
+                    name: `Non-significant (${nonsignificant.length.toLocaleString()})`,
+                    marker: {
                         color: nsColor,
                         size: pointSize,
                         opacity: pointAlpha
@@ -1634,7 +1642,9 @@
                     x: downregulated.map(d => d.logFC),
                     y: downregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Downregulated (${downregulated.length.toLocaleString()})`,                    marker: {
+                    type: 'scatter',
+                    name: `Downregulated (${downregulated.length.toLocaleString()})`,
+                    marker: {
                         color: downColor,
                         size: pointSize,
                         opacity: pointAlpha
@@ -1646,15 +1656,30 @@
                     x: upregulated.map(d => d.logFC),
                     y: upregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Upregulated (${upregulated.length.toLocaleString()})`,                    marker: {
+                    type: 'scatter',
+                    name: `Upregulated (${upregulated.length.toLocaleString()})`,
+                    marker: {
                         color: upColor,
                         size: pointSize,
                         opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: upregulated.map(d => d.gene)
+                },
+                {
+                    x: [null],
+                    y: [null],
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: `Total (${totalGenes.toLocaleString()})`,
+                    marker: {
+                        color: 'transparent',
+                        size: 0
+                    },
+                    showlegend: true,
+                    hoverinfo: 'skip'
                 }
-            ];              // Add threshold lines
+            ];// Add threshold lines
             const logPThreshold = -Math.log10(pThreshold);
             
             // Calculate X-axis range
@@ -1866,15 +1891,14 @@
                         break;
                 }
             }
-            
-            const config = {
+              const config = {
                 responsive: true,
                 displayModeBar: true,
                 modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d'],
                 displaylogo: false,
                 toImageButtonOptions: {
                     format: 'png',
-                    filename: 'volcano_plot',
+                    filename: uploadedFileName,
                     height: 800,
                     width: 1200,
                     scale: 2
@@ -1889,33 +1913,31 @@
                 }
             });
         }
-        
-        function downloadPlotAsPNG() {
+          function downloadPlotAsPNG() {
             if (!isDataLoaded) return;
             Plotly.downloadImage('volcano-plot', {
                 format: 'png',
                 width: 1200,
                 height: 800,
-                filename: 'volcano_plot',
+                filename: uploadedFileName,
                 scale: 2
             });
         }
-        
-        function downloadPlotAsHTML() {
+          function downloadPlotAsHTML() {
             if (!isDataLoaded) return;
             Plotly.downloadImage('volcano-plot', {
                 format: 'html',
-                filename: 'volcano_plot_interactive'
+                filename: uploadedFileName + '_interactive'
             });
-        }
-          function downloadPlotAsSVG() {
+        }        function downloadPlotAsSVG() {
             if (!isDataLoaded) return;
             Plotly.downloadImage('volcano-plot', {
                 format: 'svg',
-                filename: 'volcano_plot',
+                filename: uploadedFileName,
                 width: 1200,
                 height: 800
-            });        }
+            });
+        }
         
         // Helper function to set Y-axis maximum
         function setYAxisMax(value) {
