@@ -1085,15 +1085,7 @@
                         <div class="range-group">
                             <input type="range" id="legend-border-width" min="0" max="5" value="1" step="0.5">
                             <span class="range-value" id="legend-border-width-value">1</span>
-                        </div>
-                    </div>
-                      <div class="control-group">
-                        <label for="legend-dot-thickness">Legend Dot Thickness</label>
-                        <div class="range-group">
-                            <input type="range" id="legend-dot-thickness" min="0" max="5" value="1" step="0.5">
-                            <span class="range-value" id="legend-dot-thickness-value">1</span>
-                        </div>
-                    </div>
+                        </div>                    </div>
                     
                     <div class="control-group">
                         <label for="show-total-legend">Show Total Count in Legend</label>
@@ -1650,10 +1642,7 @@
             const xAxisMax = parseFloat(document.getElementById('x-axis-max').value) || 10.5;
               // Get axis line settings
             const axisLinesEnabled = document.getElementById('axis-lines-enabled').checked;
-            const axisLineColor = document.getElementById('axis-line-color').value;
-            const axisLineWidth = parseFloat(document.getElementById('axis-line-width').value);
-              // Get legend dot thickness setting
-            const legendDotThickness = parseFloat(document.getElementById('legend-dot-thickness').value);
+            const axisLineColor = document.getElementById('axis-line-color').value;            const axisLineWidth = parseFloat(document.getElementById('axis-line-width').value);
             
             // Get show total legend setting
             const showTotalLegend = document.getElementById('show-total-legend').checked;
@@ -1693,14 +1682,10 @@
                     x: sampleNS.map(d => d.logFC),
                     y: sampleNS.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Non-significant (${nonsignificant.length.toLocaleString()})`,
-                    marker: {
+                    type: 'scatter',                    name: `Non-significant (${nonsignificant.length.toLocaleString()})`,                    marker: {
                         color: nsColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: {
-                            width: legendDotThickness
-                        }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: sampleNS.map(d => d.gene)
@@ -1709,14 +1694,10 @@
                     x: downregulated.map(d => d.logFC),
                     y: downregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Downregulated (${downregulated.length.toLocaleString()})`,
-                    marker: {
+                    type: 'scatter',                    name: `Downregulated (${downregulated.length.toLocaleString()})`,                    marker: {
                         color: downColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: {
-                            width: legendDotThickness
-                        }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: downregulated.map(d => d.gene)
@@ -1725,14 +1706,10 @@
                     x: upregulated.map(d => d.logFC),
                     y: upregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',                    name: `Upregulated (${upregulated.length.toLocaleString()})`,
-                    marker: {
+                    type: 'scatter',                    name: `Upregulated (${upregulated.length.toLocaleString()})`,                    marker: {
                         color: upColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: {
-                            width: legendDotThickness
-                        }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: upregulated.map(d => d.gene)
