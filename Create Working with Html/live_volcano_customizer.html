@@ -89,10 +89,66 @@
             font-size: 16px;
             transition: all 0.3s;
         }
-        
-        .sample-data-btn:hover {
+          .sample-data-btn:hover {
             background: #5a6268;
             transform: translateY(-2px);
+        }
+        
+        .settings-lock-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .settings-lock-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+        
+        .settings-lock-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        
+        .settings-lock-btn.locked {
+            background: #dc3545;
+        }
+        
+        .settings-lock-btn.locked:hover {
+            background: #c82333;
+        }
+        
+        .settings-lock-btn.clear {
+            background: #6c757d;
+        }
+        
+        .settings-lock-btn.clear:hover {
+            background: #5a6268;
+        }
+        
+        .settings-status {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .settings-status.locked {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
         }
         
         .main-content {
@@ -361,8 +417,7 @@
     <div class="container">        <div class="header">
             <h1><i class="fas fa-dna"></i> Live Volcano Plot Customizer</h1>
             <p>Upload your Excel file for interactive real-time volcano plots</p>
-        </div>
-          <div class="file-upload-section">
+        </div>        <div class="file-upload-section">
             <div class="file-upload">
                 <i class="fas fa-upload"></i>Upload Excel File (.xlsx)
                 <input type="file" id="excel-file" accept=".xlsx,.xls" onchange="handleFileUpload(event)">
@@ -370,6 +425,19 @@
             <button class="sample-data-btn" onclick="loadSampleData()">
                 <i class="fas fa-flask"></i>Use Sample Data
             </button>
+            
+            <div class="settings-lock-section">
+                <button class="settings-lock-btn" id="lock-settings-btn" onclick="toggleSettingsLock()">
+                    <i class="fas fa-lock"></i> Lock Current Settings
+                </button>
+                <button class="settings-lock-btn clear" id="clear-settings-btn" onclick="clearLockedSettings()" style="display: none;">
+                    <i class="fas fa-unlock"></i> Clear Locked Settings
+                </button>
+                <div class="settings-status" id="settings-status">
+                    <i class="fas fa-check-circle"></i> Settings locked! New data will use these styling preferences.
+                </div>
+            </div>
+            
             <div id="file-status"></div>
         </div>
         
@@ -898,12 +966,12 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <script>
+    </div>    <script>
         let volcanoData = null;
         let isDataLoaded = false;
         let dataColumns = null;
+        let lockedSettings = null;
+        let isSettingsLocked = false;
         
         // Handle Excel file upload
         function handleFileUpload(event) {
@@ -1021,9 +1089,11 @@
                 
                 // Enable export buttons
                 document.querySelectorAll('.btn').forEach(btn => btn.disabled = false);
-                
-                updateDataInfo();
+                  updateDataInfo();
                 updatePlot();
+                
+                // Apply locked settings if available
+                applyLockedSettingsToNewData();
                   } catch (error) {
                 console.error('Error processing data:', error);
                 statusDiv.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error processing data: ${error.message}</div>`;
@@ -1051,7 +1121,8 @@
             columnInfoDiv.style.display = 'block';
         }
         
-        // Load sample data that matches your actual data structure        function loadSampleData() {
+        // Load sample data that matches your actual data structure
+        function loadSampleData() {
             const statusDiv = document.getElementById('file-status');
             statusDiv.innerHTML = '<div class="status-message"><i class="fas fa-flask"></i> Generating sample data that matches your Excel structure...</div>';
             
@@ -1080,8 +1151,7 @@
                     pValue: pValue,
                     logPValue: -Math.log10(Math.max(pValue, 1e-300))
                 });
-            }
-              isDataLoaded = true;
+            }            isDataLoaded = true;
             statusDiv.innerHTML = `<div class="status-message"><i class="fas fa-check-circle"></i> Generated ${volcanoData.length.toLocaleString()} sample genes (matching your data structure)</div>`;
             document.getElementById('main-content').style.display = 'grid';
             
@@ -1090,6 +1160,136 @@
             
             updateDataInfo();
             updatePlot();
+            
+            // Apply locked settings if available
+            applyLockedSettingsToNewData();
+        }
+        
+        // Settings Lock/Unlock Functions
+        function getAllControlSettings() {
+            const settings = {};
+            
+            // Get all input controls
+            const inputs = document.querySelectorAll('input[type="range"], input[type="color"], input[type="text"], input[type="checkbox"], input[type="number"]');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    settings[input.id] = input.checked;
+                } else {
+                    settings[input.id] = input.value;
+                }
+            });
+            
+            // Get all select controls
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                settings[select.id] = select.value;
+            });
+            
+            return settings;
+        }
+        
+        function applyControlSettings(settings) {
+            Object.keys(settings).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (element.type === 'checkbox') {
+                        element.checked = settings[id];
+                    } else {
+                        element.value = settings[id];
+                    }
+                    
+                    // Update range value displays
+                    if (element.type === 'range') {
+                        updateRangeValue(id);
+                    }
+                }
+            });
+            
+            // Update X-axis controls visibility
+            updateXAxisControls();
+            
+            // Update title position controls if needed
+            if (typeof updateTitlePositionControls === 'function') {
+                updateTitlePositionControls();
+            }
+        }
+        
+        function toggleSettingsLock() {
+            const lockBtn = document.getElementById('lock-settings-btn');
+            const clearBtn = document.getElementById('clear-settings-btn');
+            const statusDiv = document.getElementById('settings-status');
+            
+            if (!isSettingsLocked) {
+                // Lock settings
+                lockedSettings = getAllControlSettings();
+                isSettingsLocked = true;
+                
+                lockBtn.innerHTML = '<i class="fas fa-lock"></i> Settings Locked';
+                lockBtn.classList.add('locked');
+                clearBtn.style.display = 'inline-block';
+                statusDiv.classList.add('locked');
+                
+                // Save to localStorage for persistence
+                localStorage.setItem('volcanoPlotLockedSettings', JSON.stringify(lockedSettings));
+                localStorage.setItem('volcanoPlotSettingsLocked', 'true');
+                
+            } else {
+                // Unlock settings (but keep them saved)
+                isSettingsLocked = false;
+                
+                lockBtn.innerHTML = '<i class="fas fa-lock"></i> Lock Current Settings';
+                lockBtn.classList.remove('locked');
+                statusDiv.classList.remove('locked');
+            }
+        }
+        
+        function clearLockedSettings() {
+            lockedSettings = null;
+            isSettingsLocked = false;
+            
+            const lockBtn = document.getElementById('lock-settings-btn');
+            const clearBtn = document.getElementById('clear-settings-btn');
+            const statusDiv = document.getElementById('settings-status');
+            
+            lockBtn.innerHTML = '<i class="fas fa-lock"></i> Lock Current Settings';
+            lockBtn.classList.remove('locked');
+            clearBtn.style.display = 'none';
+            statusDiv.classList.remove('locked');
+            
+            // Remove from localStorage
+            localStorage.removeItem('volcanoPlotLockedSettings');
+            localStorage.removeItem('volcanoPlotSettingsLocked');
+        }
+        
+        function loadLockedSettingsFromStorage() {
+            const savedSettings = localStorage.getItem('volcanoPlotLockedSettings');
+            const settingsLocked = localStorage.getItem('volcanoPlotSettingsLocked');
+            
+            if (savedSettings && settingsLocked === 'true') {
+                lockedSettings = JSON.parse(savedSettings);
+                isSettingsLocked = true;
+                
+                const lockBtn = document.getElementById('lock-settings-btn');
+                const clearBtn = document.getElementById('clear-settings-btn');
+                const statusDiv = document.getElementById('settings-status');
+                
+                lockBtn.innerHTML = '<i class="fas fa-lock"></i> Settings Locked';
+                lockBtn.classList.add('locked');
+                clearBtn.style.display = 'inline-block';
+                statusDiv.classList.add('locked');
+            }
+        }
+        
+        function applyLockedSettingsToNewData() {
+            if (isSettingsLocked && lockedSettings) {
+                setTimeout(() => {
+                    applyControlSettings(lockedSettings);
+                    if (isDataLoaded) {
+                        updatePlot();
+                    }
+                }, 100); // Small delay to ensure DOM is ready
+            }
+        }
         
         // Update data info panel
         function updateDataInfo() {
@@ -1210,7 +1410,9 @@
                     ${hiddenNote}
                 </div>
             `;
-        }        function updatePlot() {
+        }
+        
+        function updatePlot() {
             if (!isDataLoaded || !volcanoData) return;
             
             const result = categorizeGenes();
@@ -1498,8 +1700,9 @@
                 filename: 'volcano_plot',
                 width: 1200,
                 height: 800
-            });
-        }        // Helper function to set Y-axis maximum
+            });        }
+        
+        // Helper function to set Y-axis maximum
         function setYAxisMax(value) {
             document.getElementById('y-axis-max').value = value;
             if (isDataLoaded) updatePlot();
@@ -2066,9 +2269,11 @@
         
         // Initialize X-axis controls
         updateXAxisControls();
-        
-        // Initialize box border styles
+          // Initialize box border styles
         updateBoxBorderStyles();
+        
+        // Initialize settings lock from storage
+        loadLockedSettingsFromStorage();
     </script>
 </body>
 </html>
