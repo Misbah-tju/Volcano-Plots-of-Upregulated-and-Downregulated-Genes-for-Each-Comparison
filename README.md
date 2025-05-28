@@ -5,11 +5,18 @@ This repository provides a **live, interactive volcano plot customizer** for vis
 ## ✨ Key Features
 
 - **🔴 Live Interactive Customizer**: Real-time volcano plot generation with instant updates
-- **📁 Excel Upload Support**: Direct drag-and-drop Excel file processing
-- **🎨 Full Customization**: Colors, thresholds, point sizes, and transparency
-- **📊 Live Statistics**: Real-time gene counts and percentages
-- **💾 Export Options**: PNG, SVG, and interactive HTML formats 
-- **📈 Sample Data**: Built-in demo data to try it immediately
+- **📁 Excel Upload Support**: Direct drag-and-drop Excel file processing with automatic column detection
+- **🎨 Full Visual Customization**: 
+  - Colors for upregulated, downregulated, and non-significant genes
+  - Point size, transparency, and border controls
+  - Customizable border width and color with preset options
+- **📐 Advanced Display Controls**:
+  - Y-axis maximum limit to hide extreme values (prevents plot squashing)
+  - Smart filtering with hidden point counters
+  - Real-time threshold adjustments
+- **📊 Live Statistics**: Real-time gene counts, percentages, and hidden point tracking
+- **💾 Professional Export**: PNG, SVG, and interactive HTML formats 
+- **📈 Demo Ready**: Built-in sample data matching your Excel structure
 
 ## 🚀 Quick Start
 
@@ -90,8 +97,19 @@ The live customizer automatically detects column names and provides helpful erro
 ## 🎨 Customization Options
 
 ### Live Interactive Features
-- **Colors**: Upregulated, downregulated, and non-significant gene colors
-- **Thresholds**: Fold change and p-value significance cutoffs
+- **🎨 Color Controls**: Custom colors for upregulated, downregulated, and non-significant genes
+- **⚪ Point Settings**: Size and transparency adjustments with real-time preview
+- **🔲 Border Controls**: 
+  - Adjustable border width (0-3 pixels)
+  - Custom border color selection
+  - Quick presets: No Border, Thin, Thick
+- **📐 Display Controls**:
+  - Y-axis maximum limit (hide points above specified -log₁₀(p) value)
+  - Quick presets: Standard (50) and High (300)
+  - Real-time hidden point counter
+- **📏 Significance Thresholds**: Fold change and p-value cutoff adjustments
+- **📝 Labels**: Custom axis labels and plot title
+- **💾 Export Options**: PNG, SVG, and interactive HTML formats with professional quality
 - **Point Settings**: Size, transparency, and outline options
 - **Labels**: Custom axis labels and title
 - **Export**: PNG, SVG, and interactive HTML formats

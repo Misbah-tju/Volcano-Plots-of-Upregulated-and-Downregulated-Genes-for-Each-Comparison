@@ -406,12 +406,184 @@
                             <span class="range-value" id="point-size-value">4</span>
                         </div>
                     </div>
-                    
-                    <div class="control-group">
+                      <div class="control-group">
                         <label for="point-alpha">Point Transparency</label>
                         <div class="range-group">
                             <input type="range" id="point-alpha" min="0.1" max="1.0" value="0.6" step="0.1">
                             <span class="range-value" id="point-alpha-value">0.6</span>
+                        </div>
+                    </div>                </div>
+                
+                <!-- Axis Line Controls -->
+                <div class="control-section">
+                    <h3><span class="icon">📐</span>Axis Line Settings</h3>
+                    
+                    <div class="control-group">
+                        <label for="axis-lines-enabled">Show Axis Lines</label>
+                        <input type="checkbox" id="axis-lines-enabled" checked>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="axis-line-color">Axis Line Color</label>
+                        <input type="color" id="axis-line-color" value="#000000" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="axis-line-width">Axis Line Width</label>
+                        <div class="range-group">
+                            <input type="range" id="axis-line-width" min="0.5" max="4" value="1" step="0.5">
+                            <span class="range-value" id="axis-line-width-value">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="major-ticks-enabled">Show Major Ticks (Outside)</label>
+                        <input type="checkbox" id="major-ticks-enabled" checked>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="tick-length">Tick Length</label>
+                        <div class="range-group">
+                            <input type="range" id="tick-length" min="3" max="12" value="6" step="1">
+                            <span class="range-value" id="tick-length-value">6</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="tick-width">Tick Width</label>
+                        <div class="range-group">
+                            <input type="range" id="tick-width" min="0.5" max="3" value="1" step="0.5">
+                            <span class="range-value" id="tick-width-value">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary" onclick="setAxisPreset('minimal')" style="flex: 1;">
+                                <span class="icon">⬜</span>Minimal
+                            </button>
+                            <button class="btn btn-secondary" onclick="setAxisPreset('standard')" style="flex: 1;">
+                                <span class="icon">📐</span>Standard
+                            </button>
+                            <button class="btn btn-secondary" onclick="setAxisPreset('bold')" style="flex: 1;">
+                                <span class="icon">⬛</span>Bold
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Axis Tick Spacing Controls -->
+                <div class="control-section">
+                    <h3><span class="icon">📏</span>Axis Tick Spacing</h3>
+                    
+                    <div class="control-group">
+                        <label for="x-tick-spacing">X-Axis Tick Interval</label>
+                        <div class="range-group">
+                            <input type="range" id="x-tick-spacing" min="0.5" max="5.0" value="1.0" step="0.5">
+                            <span class="range-value" id="x-tick-spacing-value">1.0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="y-tick-spacing">Y-Axis Tick Interval</label>
+                        <div class="range-group">
+                            <input type="range" id="y-tick-spacing" min="1" max="100" value="5" step="1">
+                            <span class="range-value" id="y-tick-spacing-value">5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="auto-tick-spacing">Auto Tick Spacing</label>
+                        <input type="checkbox" id="auto-tick-spacing" checked>
+                    </div>
+                    
+                    <div class="control-group">
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary" onclick="setTickSpacingPreset('dense')" style="flex: 1;">
+                                <span class="icon">📊</span>Dense
+                            </button>
+                            <button class="btn btn-secondary" onclick="setTickSpacingPreset('normal')" style="flex: 1;">
+                                <span class="icon">📈</span>Normal
+                            </button>
+                            <button class="btn btn-secondary" onclick="setTickSpacingPreset('sparse')" style="flex: 1;">
+                                <span class="icon">📉</span>Sparse
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Grid Line Controls -->
+                <div class="control-section">
+                    <h3><span class="icon">📋</span>Grid Settings</h3>
+                    
+                    <div class="control-group">
+                        <label for="grid-enabled">Show Grid Lines</label>
+                        <input type="checkbox" id="grid-enabled" checked>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="grid-color">Grid Color</label>
+                        <input type="color" id="grid-color" value="#e5e5e5" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="grid-width">Grid Line Width</label>
+                        <div class="range-group">
+                            <input type="range" id="grid-width" min="0.5" max="3" value="1" step="0.5">
+                            <span class="range-value" id="grid-width-value">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary" onclick="setGridPreset('light')" style="flex: 1;">
+                                <span class="icon">⬜</span>Light
+                            </button>
+                            <button class="btn btn-secondary" onclick="setGridPreset('medium')" style="flex: 1;">
+                                <span class="icon">▫️</span>Medium
+                            </button>
+                            <button class="btn btn-secondary" onclick="setGridPreset('off')" style="flex: 1;">
+                                <span class="icon">⭕</span>Off
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- UI Box Border Settings -->
+                <div class="control-section">
+                    <h3><span class="icon">🔲</span>Box Border Settings</h3>
+                    
+                    <div class="control-group">
+                        <label for="box-border-width">Box Border Width</label>
+                        <div class="range-group">
+                            <input type="range" id="box-border-width" min="0" max="5" value="1" step="1">
+                            <span class="range-value" id="box-border-width-value">1</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="box-border-color">Box Border Color</label>
+                        <input type="color" id="box-border-color" value="#e9ecef" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="box-border-radius">Box Corner Radius</label>
+                        <div class="range-group">
+                            <input type="range" id="box-border-radius" min="0" max="20" value="10" step="2">
+                            <span class="range-value" id="box-border-radius-value">10</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary" onclick="setBoxBorderPreset('none')" style="flex: 1;">
+                                <span class="icon">⭕</span>No Border
+                            </button>
+                            <button class="btn btn-secondary" onclick="setBoxBorderPreset('subtle')" style="flex: 1;">
+                                <span class="icon">▫️</span>Subtle
+                            </button>
+                            <button class="btn btn-secondary" onclick="setBoxBorderPreset('bold')" style="flex: 1;">
+                                <span class="icon">⬛</span>Bold
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -427,8 +599,7 @@
                             <span class="range-value" id="fc-threshold-value">1.0</span>
                         </div>
                     </div>
-                    
-                    <div class="control-group">
+                      <div class="control-group">
                         <label for="pval-threshold">P-value Threshold</label>
                         <select id="pval-threshold">
                             <option value="0.001">0.001</option>
@@ -439,13 +610,163 @@
                     </div>
                 </div>
                 
-                <!-- Title and Labels -->
+                <!-- Y-axis Display Limit -->
                 <div class="control-section">
-                    <h3><span class="icon">📝</span>Labels</h3>
+                    <h3><span class="icon">📐</span>Y-axis Display Limit</h3>
+                    
+                    <div class="control-group">
+                        <label for="y-axis-max">Maximum Y-axis Value (-log₁₀p)</label>
+                        <input type="number" id="y-axis-max" value="300" step="10" placeholder="300" min="10" max="500">
+                        <small style="color: #6c757d; font-size: 0.8rem; margin-top: 2px; display: block;">
+                            💡 Hide extremely high values to improve plot readability. Points above this value will be omitted from display.
+                        </small>
+                    </div>
+                    
+                    <div class="control-group">
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary" onclick="setYAxisMax(50)" style="flex: 1;">
+                                <span class="icon">📊</span>Standard (50)
+                            </button>
+                            <button class="btn btn-secondary" onclick="setYAxisMax(300)" style="flex: 1;">
+                                <span class="icon">🎯</span>High (300)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- X-axis Display Range -->
+                <div class="control-section">
+                    <h3><span class="icon">📏</span>X-axis Display Range</h3>
+                    
+                    <div class="control-group">
+                        <label for="x-axis-auto">Auto X-axis Range</label>
+                        <input type="checkbox" id="x-axis-auto" checked>
+                    </div>
+                    
+                    <div class="control-group" id="custom-x-range" style="display: none;">
+                        <label for="x-axis-min">Minimum X-axis Value (log₂FC)</label>
+                        <input type="number" id="x-axis-min" value="-10.5" step="0.5" placeholder="-10.5">
+                    </div>
+                    
+                    <div class="control-group" id="custom-x-range-max" style="display: none;">
+                        <label for="x-axis-max">Maximum X-axis Value (log₂FC)</label>
+                        <input type="number" id="x-axis-max" value="10.5" step="0.5" placeholder="10.5">
+                        <small style="color: #6c757d; font-size: 0.8rem; margin-top: 2px; display: block;">
+                            💡 Set custom range to focus on specific fold change values. Use -10.5 to 10.5 for symmetric view.
+                        </small>
+                    </div>
+                    
+                    <div class="control-group">
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary" onclick="setXAxisRange(-5, 5)" style="flex: 1;">
+                                <span class="icon">📊</span>±5
+                            </button>
+                            <button class="btn btn-secondary" onclick="setXAxisRange(-10.5, 10.5)" style="flex: 1;">
+                                <span class="icon">📈</span>±10.5
+                            </button>
+                            <button class="btn btn-secondary" onclick="setXAxisRange(-15, 15)" style="flex: 1;">
+                                <span class="icon">📉</span>±15
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                  <!-- Title and Labels -->
+                <div class="control-section">
+                    <h3><span class="icon">📝</span>Labels & Typography</h3>
                     
                     <div class="control-group">
                         <label for="plot-title">Plot Title</label>
                         <input type="text" id="plot-title" value="Volcano Plot: MG72 vs MG24" placeholder="Enter title">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="title-font-size">Title Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="title-font-size" min="12" max="32" value="18" step="2">
+                            <span class="range-value" id="title-font-size-value">18</span>
+                        </div>
+                    </div>
+                      <div class="control-group">
+                        <label for="title-font-weight">Title Font Weight</label>
+                        <select id="title-font-weight">
+                            <option value="normal">Normal</option>
+                            <option value="bold" selected>Bold</option>
+                            <option value="bolder">Extra Bold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="title-font-style">Title Font Style</label>
+                        <select id="title-font-style">
+                            <option value="normal" selected>Normal</option>
+                            <option value="italic">Italic</option>
+                            <option value="oblique">Oblique</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="title-text-decoration">Title Text Decoration</label>
+                        <select id="title-text-decoration">
+                            <option value="none" selected>None</option>
+                            <option value="underline">Underline</option>
+                            <option value="overline">Overline</option>
+                            <option value="line-through">Strike-through</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="title-font-family">Title Font Family</label>
+                        <select id="title-font-family">
+                            <option value="Arial, sans-serif" selected>Arial</option>
+                            <option value="Helvetica, sans-serif">Helvetica</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="Tahoma, sans-serif">Tahoma</option>
+                            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                            <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                            <option value="Impact, sans-serif">Impact</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="title-color">Title Color</label>
+                        <input type="color" id="title-color" value="#000000" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="title-position">Title Position</label>
+                        <select id="title-position">
+                            <option value="top center" selected>Top Center</option>
+                            <option value="top left">Top Left</option>
+                            <option value="top right">Top Right</option>
+                            <option value="middle center">Middle Center</option>
+                            <option value="custom">Custom (Draggable)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group" id="custom-title-position" style="display: none;">
+                        <label>Custom Title Position</label>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="flex: 1;">
+                                <label for="title-x" style="font-size: 0.8rem;">X Position</label>
+                                <div class="range-group">
+                                    <input type="range" id="title-x" min="0" max="1" value="0.5" step="0.05">
+                                    <span class="range-value" id="title-x-value">0.5</span>
+                                </div>
+                            </div>
+                            <div style="flex: 1;">
+                                <label for="title-y" style="font-size: 0.8rem;">Y Position</label>
+                                <div class="range-group">
+                                    <input type="range" id="title-y" min="0" max="1" value="0.95" step="0.05">
+                                    <span class="range-value" id="title-y-value">0.95</span>
+                                </div>
+                            </div>
+                        </div>
+                        <small style="color: #6c757d; font-size: 0.8rem;">
+                            💡 Drag the title on the plot or use sliders. 0,0 = bottom-left, 1,1 = top-right
+                        </small>
                     </div>
                     
                     <div class="control-group">
@@ -454,8 +775,101 @@
                     </div>
                     
                     <div class="control-group">
+                        <label for="axis-label-font-size">Axis Label Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="axis-label-font-size" min="10" max="20" value="14" step="1">
+                            <span class="range-value" id="axis-label-font-size-value">14</span>
+                        </div>
+                    </div>
+                      <div class="control-group">
+                        <label for="axis-label-font-weight">Axis Label Font Weight</label>
+                        <select id="axis-label-font-weight">
+                            <option value="normal" selected>Normal</option>
+                            <option value="bold">Bold</option>
+                            <option value="bolder">Extra Bold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="axis-label-font-style">Axis Label Font Style</label>
+                        <select id="axis-label-font-style">
+                            <option value="normal" selected>Normal</option>
+                            <option value="italic">Italic</option>
+                            <option value="oblique">Oblique</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="axis-label-font-family">Axis Label Font Family</label>
+                        <select id="axis-label-font-family">
+                            <option value="Arial, sans-serif" selected>Arial</option>
+                            <option value="Helvetica, sans-serif">Helvetica</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="Verdana, sans-serif">Verdana</option>
+                            <option value="Tahoma, sans-serif">Tahoma</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="axis-label-color">Axis Label Color</label>
+                        <input type="color" id="axis-label-color" value="#000000" class="color-input">
+                    </div>
+                      <div class="control-group">
                         <label for="y-label">Y-axis Label</label>
                         <input type="text" id="y-label" value="-log₁₀(P-value)" placeholder="Y-axis label">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="tick-label-font-size">Tick Label Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="tick-label-font-size" min="8" max="16" value="12" step="1">
+                            <span class="range-value" id="tick-label-font-size-value">12</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="tick-label-font-weight">Tick Label Font Weight</label>
+                        <select id="tick-label-font-weight">
+                            <option value="normal" selected>Normal</option>
+                            <option value="bold">Bold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="tick-label-color">Tick Label Color</label>
+                        <input type="color" id="tick-label-color" value="#000000" class="color-input">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="legend-font-size">Legend Font Size</label>
+                        <div class="range-group">
+                            <input type="range" id="legend-font-size" min="8" max="18" value="12" step="1">
+                            <span class="range-value" id="legend-font-size-value">12</span>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="legend-font-weight">Legend Font Weight</label>
+                        <select id="legend-font-weight">
+                            <option value="normal" selected>Normal</option>
+                            <option value="bold">Bold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary" onclick="setTypographyPreset('minimal')" style="flex: 1;">
+                                <span class="icon">🔤</span>Minimal
+                            </button>
+                            <button class="btn btn-secondary" onclick="setTypographyPreset('standard')" style="flex: 1;">
+                                <span class="icon">📝</span>Standard
+                            </button>
+                            <button class="btn btn-secondary" onclick="setTypographyPreset('bold')" style="flex: 1;">
+                                <span class="icon">🔠</span>Bold
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -777,12 +1191,17 @@
                 stats: { upregulated, downregulated, nonsignificant, total: volcanoData.length }
             };
         }
-        
-        function updateStats(stats) {
+          function updateStats(stats, hiddenCount = 0, yAxisMax = 300) {
             const statsContainer = document.getElementById('plot-stats');
             const upPct = ((stats.upregulated / stats.total) * 100).toFixed(1);
             const downPct = ((stats.downregulated / stats.total) * 100).toFixed(1);
             const nsPct = ((stats.nonsignificant / stats.total) * 100).toFixed(1);
+            
+            const hiddenNote = hiddenCount > 0 ? 
+                `<div class="stat-item" style="background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107;">
+                    <div class="stat-value" style="color: #856404;">${hiddenCount.toLocaleString()}</div>
+                    <div class="stat-label" style="color: #856404;">Hidden (> ${yAxisMax})</div>
+                </div>` : '';
             
             statsContainer.innerHTML = `
                 <div class="stats-grid">
@@ -802,20 +1221,17 @@
                         <div class="stat-value">${stats.total.toLocaleString()}</div>
                         <div class="stat-label">Total Genes</div>
                     </div>
+                    ${hiddenNote}
                 </div>
             `;
-        }
-        
-        function updatePlot() {
+        }        function updatePlot() {
             if (!isDataLoaded || !volcanoData) return;
             
             const result = categorizeGenes();
             if (!result) return;
             
             const { data, stats } = result;
-            updateStats(stats);
-            
-            // Get current settings
+              // Get current settings first
             const upColor = document.getElementById('upregulated-color').value;
             const downColor = document.getElementById('downregulated-color').value;
             const nsColor = document.getElementById('nonsignificant-color').value;
@@ -824,13 +1240,41 @@
             const fcThreshold = parseFloat(document.getElementById('fc-threshold').value);
             const pThreshold = parseFloat(document.getElementById('pval-threshold').value);
             const plotTitle = document.getElementById('plot-title').value;
-            const xLabel = document.getElementById('x-label').value;
-            const yLabel = document.getElementById('y-label').value;
+            const xLabel = document.getElementById('x-label').value;            const yLabel = document.getElementById('y-label').value;            const yAxisMax = parseFloat(document.getElementById('y-axis-max').value) || 300;
             
-            // Separate data by category
-            const upregulated = data.filter(d => d.category === 'upregulated');
-            const downregulated = data.filter(d => d.category === 'downregulated');
-            const nonsignificant = data.filter(d => d.category === 'nonsignificant');
+            // Get X-axis range settings
+            const xAxisAuto = document.getElementById('x-axis-auto').checked;
+            const xAxisMin = parseFloat(document.getElementById('x-axis-min').value) || -10.5;
+            const xAxisMax = parseFloat(document.getElementById('x-axis-max').value) || 10.5;
+            
+            // Get axis line settings
+            const axisLinesEnabled = document.getElementById('axis-lines-enabled').checked;
+            const axisLineColor = document.getElementById('axis-line-color').value;
+            const axisLineWidth = parseFloat(document.getElementById('axis-line-width').value);
+            const majorTicksEnabled = document.getElementById('major-ticks-enabled').checked;            const tickLength = parseFloat(document.getElementById('tick-length').value);
+            const tickWidth = parseFloat(document.getElementById('tick-width').value);
+            
+            // Get tick spacing settings
+            const autoTickSpacing = document.getElementById('auto-tick-spacing').checked;
+            const xTickSpacing = parseFloat(document.getElementById('x-tick-spacing').value);
+            const yTickSpacing = parseFloat(document.getElementById('y-tick-spacing').value);
+            
+            // Get grid settings
+            const gridEnabled = document.getElementById('grid-enabled').checked;
+            const gridColor = document.getElementById('grid-color').value;
+            const gridWidth = parseFloat(document.getElementById('grid-width').value);
+            
+            // Filter data to remove points above Y-axis maximum
+            const filteredData = data.filter(d => d.logPValue <= yAxisMax);
+            const hiddenCount = data.length - filteredData.length;
+            
+            // Update stats with hidden count information
+            updateStats(stats, hiddenCount, yAxisMax);
+            
+            // Separate filtered data by category
+            const upregulated = filteredData.filter(d => d.category === 'upregulated');
+            const downregulated = filteredData.filter(d => d.category === 'downregulated');
+            const nonsignificant = filteredData.filter(d => d.category === 'nonsignificant');
             
             // Performance optimization: subsample non-significant points if too many
             const maxNSPoints = 8000;
@@ -842,13 +1286,10 @@
                     x: sampleNS.map(d => d.logFC),
                     y: sampleNS.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',
-                    name: `Non-significant (${nonsignificant.length.toLocaleString()})`,
-                    marker: {
+                    type: 'scatter',                    name: `Non-significant (${nonsignificant.length.toLocaleString()})`,                    marker: {
                         color: nsColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: { width: 0 }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: sampleNS.map(d => d.gene)
@@ -857,13 +1298,10 @@
                     x: downregulated.map(d => d.logFC),
                     y: downregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',
-                    name: `Downregulated (${downregulated.length.toLocaleString()})`,
-                    marker: {
+                    type: 'scatter',                    name: `Downregulated (${downregulated.length.toLocaleString()})`,                    marker: {
                         color: downColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: { width: 0 }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: downregulated.map(d => d.gene)
@@ -872,26 +1310,29 @@
                     x: upregulated.map(d => d.logFC),
                     y: upregulated.map(d => d.logPValue),
                     mode: 'markers',
-                    type: 'scatter',
-                    name: `Upregulated (${upregulated.length.toLocaleString()})`,
-                    marker: {
+                    type: 'scatter',                    name: `Upregulated (${upregulated.length.toLocaleString()})`,                    marker: {
                         color: upColor,
                         size: pointSize,
-                        opacity: pointAlpha,
-                        line: { width: 0 }
+                        opacity: pointAlpha
                     },
                     hovertemplate: '<b>%{text}</b><br>log₂FC: %{x:.2f}<br>-log₁₀(p): %{y:.2f}<extra></extra>',
                     text: upregulated.map(d => d.gene)
                 }
-            ];
-            
-            // Add threshold lines
+            ];              // Add threshold lines
             const logPThreshold = -Math.log10(pThreshold);
-            const xRange = [
-                Math.min(...data.map(d => d.logFC)) - 0.5, 
-                Math.max(...data.map(d => d.logFC)) + 0.5
-            ];
-            const yRange = [0, Math.max(...data.map(d => d.logPValue)) * 1.05];
+            
+            // Calculate X-axis range
+            let xRange;
+            if (xAxisAuto) {
+                xRange = [
+                    Math.min(...filteredData.map(d => d.logFC)) - 0.5, 
+                    Math.max(...filteredData.map(d => d.logFC)) + 0.5
+                ];
+            } else {
+                xRange = [xAxisMin, xAxisMax];
+            }
+            
+            const yRange = [0, Math.min(yAxisMax, Math.max(...filteredData.map(d => d.logPValue))) * 1.05];
             
             // Horizontal p-value threshold line
             traces.push({
@@ -924,14 +1365,12 @@
                 line: { color: 'black', width: 2, dash: 'dash' },
                 showlegend: false,
                 hoverinfo: 'skip'
-            });
-            
-            const layout = {
+            });            // Create basic layout
+            let layout = {
                 title: {
-                    text: plotTitle,
+                    text: plotTitle + (hiddenCount > 0 ? `<br><span style="font-size: 14px; color: #666;">(${hiddenCount.toLocaleString()} points with -log₁₀(p) > ${yAxisMax} hidden)</span>` : ''),
                     font: { size: 18 }
-                },
-                xaxis: {
+                },                xaxis: {
                     title: {
                         text: xLabel,
                         font: { size: 14 }
@@ -939,14 +1378,36 @@
                     zeroline: true,
                     zerolinecolor: 'gray',
                     zerolinewidth: 1,
-                    gridcolor: 'lightgray'
+                    showgrid: gridEnabled,
+                    gridcolor: gridColor,
+                    gridwidth: gridWidth,
+                    showline: axisLinesEnabled,
+                    linecolor: axisLineColor,
+                    linewidth: axisLineWidth,
+                    ticks: majorTicksEnabled ? 'outside' : '',
+                    ticklen: tickLength,
+                    tickwidth: tickWidth,
+                    tickcolor: axisLineColor,
+                    dtick: autoTickSpacing ? null : xTickSpacing,
+                    range: xAxisAuto ? null : [xAxisMin, xAxisMax]
                 },
                 yaxis: {
                     title: {
                         text: yLabel,
                         font: { size: 14 }
                     },
-                    gridcolor: 'lightgray'
+                    showgrid: gridEnabled,
+                    gridcolor: gridColor,
+                    gridwidth: gridWidth,
+                    range: [0, yAxisMax],
+                    showline: axisLinesEnabled,
+                    linecolor: axisLineColor,
+                    linewidth: axisLineWidth,
+                    ticks: majorTicksEnabled ? 'outside' : '',
+                    ticklen: tickLength,
+                    tickwidth: tickWidth,
+                    tickcolor: axisLineColor,
+                    dtick: autoTickSpacing ? null : yTickSpacing
                 },
                 plot_bgcolor: 'white',
                 paper_bgcolor: 'white',
@@ -960,6 +1421,48 @@
                 margin: { r: 200, l: 80, t: 80, b: 80 },
                 hovermode: 'closest'
             };
+
+            // Apply enhanced typography
+            layout = updatePlotTypography(layout);
+
+            // Handle custom title positioning
+            const titlePosition = document.getElementById('title-position').value;
+            if (titlePosition === 'custom') {
+                const titleX = parseFloat(document.getElementById('title-x').value);
+                const titleY = parseFloat(document.getElementById('title-y').value);
+                layout.title.x = titleX;
+                layout.title.y = titleY;
+                layout.title.xanchor = 'center';
+                layout.title.yanchor = 'middle';
+            } else {
+                // Handle preset positions
+                switch(titlePosition) {
+                    case 'top left':
+                        layout.title.x = 0.02;
+                        layout.title.y = 0.98;
+                        layout.title.xanchor = 'left';
+                        layout.title.yanchor = 'top';
+                        break;
+                    case 'top right':
+                        layout.title.x = 0.98;
+                        layout.title.y = 0.98;
+                        layout.title.xanchor = 'right';
+                        layout.title.yanchor = 'top';
+                        break;
+                    case 'middle center':
+                        layout.title.x = 0.5;
+                        layout.title.y = 0.5;
+                        layout.title.xanchor = 'center';
+                        layout.title.yanchor = 'middle';
+                        break;
+                    default: // 'top center'
+                        layout.title.x = 0.5;
+                        layout.title.y = 0.95;
+                        layout.title.xanchor = 'center';
+                        layout.title.yanchor = 'top';
+                        break;
+                }
+            }
             
             const config = {
                 responsive: true,
@@ -975,7 +1478,13 @@
                 }
             };
             
-            Plotly.newPlot('volcano-plot', traces, layout, config);
+            Plotly.newPlot('volcano-plot', traces, layout, config).then(() => {
+                // Enable draggable title if custom positioning is selected
+                const titlePosition = document.getElementById('title-position').value;
+                if (titlePosition === 'custom') {
+                    setTimeout(enableDraggableTitle, 100);
+                }
+            });
         }
         
         function downloadPlotAsPNG() {
@@ -996,8 +1505,7 @@
                 filename: 'volcano_plot_interactive'
             });
         }
-        
-        function downloadPlotAsSVG() {
+          function downloadPlotAsSVG() {
             if (!isDataLoaded) return;
             Plotly.downloadImage('volcano-plot', {
                 format: 'svg',
@@ -1005,7 +1513,576 @@
                 width: 1200,
                 height: 800
             });
+        }        // Helper function to set Y-axis maximum
+        function setYAxisMax(value) {
+            document.getElementById('y-axis-max').value = value;
+            if (isDataLoaded) updatePlot();
         }
+        
+        // Helper function to set X-axis range
+        function setXAxisRange(minVal, maxVal) {
+            document.getElementById('x-axis-auto').checked = false;
+            document.getElementById('x-axis-min').value = minVal;
+            document.getElementById('x-axis-max').value = maxVal;
+            updateXAxisControls();
+            if (isDataLoaded) updatePlot();
+        }
+        
+        // Function to update X-axis control visibility
+        function updateXAxisControls() {
+            const xAxisAuto = document.getElementById('x-axis-auto').checked;
+            const customXRange = document.getElementById('custom-x-range');
+            const customXRangeMax = document.getElementById('custom-x-range-max');
+            
+            if (xAxisAuto) {
+                customXRange.style.display = 'none';
+                customXRangeMax.style.display = 'none';
+            } else {
+                customXRange.style.display = 'block';
+                customXRangeMax.style.display = 'block';
+            }
+        }
+        
+        // Helper function to set axis presets
+        function setAxisPreset(preset) {
+            const axisEnabled = document.getElementById('axis-lines-enabled');
+            const axisColor = document.getElementById('axis-line-color');
+            const axisWidth = document.getElementById('axis-line-width');
+            const ticksEnabled = document.getElementById('major-ticks-enabled');
+            const tickLength = document.getElementById('tick-length');
+            const tickWidth = document.getElementById('tick-width');
+            
+            switch(preset) {
+                case 'minimal':
+                    axisEnabled.checked = false;
+                    ticksEnabled.checked = false;
+                    break;
+                case 'standard':
+                    axisEnabled.checked = true;
+                    axisColor.value = '#000000';
+                    axisWidth.value = '1';
+                    ticksEnabled.checked = true;
+                    tickLength.value = '6';
+                    tickWidth.value = '1';
+                    break;
+                case 'bold':
+                    axisEnabled.checked = true;
+                    axisColor.value = '#000000';
+                    axisWidth.value = '2';
+                    ticksEnabled.checked = true;
+                    tickLength.value = '8';
+                    tickWidth.value = '2';
+                    break;
+            }
+            
+            // Update displays and plot
+            updateRangeValue('axis-line-width');
+            updateRangeValue('tick-length');
+            updateRangeValue('tick-width');            if (isDataLoaded) updatePlot();
+        }
+        
+        // Helper function to set tick spacing presets
+        function setTickSpacingPreset(preset) {
+            const autoTicks = document.getElementById('auto-tick-spacing');
+            const xSpacing = document.getElementById('x-tick-spacing');
+            const ySpacing = document.getElementById('y-tick-spacing');
+            
+            switch(preset) {
+                case 'dense':
+                    autoTicks.checked = false;
+                    xSpacing.value = '0.5';
+                    ySpacing.value = '2';
+                    break;
+                case 'normal':
+                    autoTicks.checked = false;
+                    xSpacing.value = '1.0';
+                    ySpacing.value = '5';
+                    break;
+                case 'sparse':
+                    autoTicks.checked = false;
+                    xSpacing.value = '2.0';
+                    ySpacing.value = '10';
+                    break;
+            }
+            
+            // Update displays and plot
+            updateRangeValue('x-tick-spacing');
+            updateRangeValue('y-tick-spacing');
+            if (isDataLoaded) updatePlot();
+        }
+        
+        // Helper function to set grid presets
+        function setGridPreset(preset) {
+            const gridEnabled = document.getElementById('grid-enabled');
+            const gridColor = document.getElementById('grid-color');
+            const gridWidth = document.getElementById('grid-width');
+            
+            switch(preset) {
+                case 'light':
+                    gridEnabled.checked = true;
+                    gridColor.value = '#f0f0f0';
+                    gridWidth.value = '0.5';
+                    break;
+                case 'medium':
+                    gridEnabled.checked = true;
+                    gridColor.value = '#e5e5e5';
+                    gridWidth.value = '1';
+                    break;
+                case 'off':
+                    gridEnabled.checked = false;
+                    break;
+            }
+            
+            // Update display and plot
+            updateRangeValue('grid-width');
+            if (isDataLoaded) updatePlot();
+        }
+          // Helper function to set typography presets
+        function setTypographyPreset(preset) {
+            const titleFontSize = document.getElementById('title-font-size');
+            const titleFontWeight = document.getElementById('title-font-weight');
+            const titleFontStyle = document.getElementById('title-font-style');
+            const titleTextDecoration = document.getElementById('title-text-decoration');
+            const titleFontFamily = document.getElementById('title-font-family');
+            const axisLabelFontSize = document.getElementById('axis-label-font-size');
+            const axisLabelFontWeight = document.getElementById('axis-label-font-weight');
+            const axisLabelFontStyle = document.getElementById('axis-label-font-style');
+            const tickLabelFontSize = document.getElementById('tick-label-font-size');
+            const legendFontSize = document.getElementById('legend-font-size');
+            
+            switch(preset) {
+                case 'minimal':
+                    titleFontSize.value = '14';
+                    titleFontWeight.value = 'normal';
+                    titleFontStyle.value = 'normal';
+                    titleTextDecoration.value = 'none';
+                    titleFontFamily.value = 'Arial, sans-serif';
+                    axisLabelFontSize.value = '12';
+                    axisLabelFontWeight.value = 'normal';
+                    axisLabelFontStyle.value = 'normal';
+                    tickLabelFontSize.value = '10';
+                    legendFontSize.value = '10';
+                    break;
+                case 'standard':
+                    titleFontSize.value = '18';
+                    titleFontWeight.value = 'bold';
+                    titleFontStyle.value = 'normal';
+                    titleTextDecoration.value = 'none';
+                    titleFontFamily.value = 'Arial, sans-serif';
+                    axisLabelFontSize.value = '14';
+                    axisLabelFontWeight.value = 'normal';
+                    axisLabelFontStyle.value = 'normal';
+                    tickLabelFontSize.value = '12';
+                    legendFontSize.value = '12';
+                    break;
+                case 'bold':
+                    titleFontSize.value = '24';
+                    titleFontWeight.value = 'bolder';
+                    titleFontStyle.value = 'normal';
+                    titleTextDecoration.value = 'none';
+                    titleFontFamily.value = 'Arial, sans-serif';
+                    axisLabelFontSize.value = '16';
+                    axisLabelFontWeight.value = 'bold';
+                    axisLabelFontStyle.value = 'normal';
+                    tickLabelFontSize.value = '14';
+                    legendFontSize.value = '14';
+                    break;
+            }
+            
+            // Update all range displays
+            updateRangeValue('title-font-size');
+            updateRangeValue('axis-label-font-size');
+            updateRangeValue('tick-label-font-size');
+            updateRangeValue('legend-font-size');
+            
+            if (isDataLoaded) updatePlot();
+        }        // Function to update plot with enhanced typography
+        function updatePlotTypography(layout) {
+            const titleFontSize = parseInt(document.getElementById('title-font-size').value);
+            const titleFontWeight = document.getElementById('title-font-weight').value;
+            const titleFontStyle = document.getElementById('title-font-style').value;
+            const titleTextDecoration = document.getElementById('title-text-decoration').value;
+            const titleFontFamily = document.getElementById('title-font-family').value;
+            const titleColor = document.getElementById('title-color').value;
+            
+            const axisLabelFontSize = parseInt(document.getElementById('axis-label-font-size').value);
+            const axisLabelFontWeight = document.getElementById('axis-label-font-weight').value;
+            const axisLabelFontStyle = document.getElementById('axis-label-font-style').value;
+            const axisLabelFontFamily = document.getElementById('axis-label-font-family').value;
+            const axisLabelColor = document.getElementById('axis-label-color').value;
+            
+            const tickLabelFontSize = parseInt(document.getElementById('tick-label-font-size').value);
+            const tickLabelFontWeight = document.getElementById('tick-label-font-weight').value;
+            const tickLabelColor = document.getElementById('tick-label-color').value;
+            
+            const legendFontSize = parseInt(document.getElementById('legend-font-size').value);
+            const legendFontWeight = document.getElementById('legend-font-weight').value;
+            
+            // Apply typography to title
+            layout.title.font = {
+                size: titleFontSize,
+                family: titleFontFamily,
+                color: titleColor
+            };
+            
+            // Handle font weight for title (use CSS style approach)
+            if (titleFontWeight === 'bold' || titleFontWeight === 'bolder') {
+                layout.title.font.weight = titleFontWeight;
+            }
+            
+            // Create title text with styles - preserve existing title text structure
+            let baseTitleText = document.getElementById('plot-title').value;
+            let titleText = baseTitleText;
+            
+            // Apply text decorations and styles
+            if (titleFontStyle === 'italic') {
+                titleText = `<i>${titleText}</i>`;
+            }
+            if (titleTextDecoration === 'underline') {
+                titleText = `<u>${titleText}</u>`;
+            } else if (titleTextDecoration === 'overline') {
+                titleText = `<span style="text-decoration: overline;">${titleText}</span>`;
+            } else if (titleTextDecoration === 'line-through') {
+                titleText = `<s>${titleText}</s>`;
+            }
+            
+            // If the original layout had additional subtitle text, preserve it
+            if (layout.title.text && layout.title.text.includes('<br><span')) {
+                const subtitleMatch = layout.title.text.match(/(<br><span.*?<\/span>)/);
+                if (subtitleMatch) {
+                    titleText += subtitleMatch[1];
+                }
+            }
+            
+            layout.title.text = titleText;
+            
+            // Apply typography to axis labels
+            layout.xaxis.title.font = {
+                size: axisLabelFontSize,
+                family: axisLabelFontFamily,
+                color: axisLabelColor
+            };
+            
+            layout.yaxis.title.font = {
+                size: axisLabelFontSize,
+                family: axisLabelFontFamily,
+                color: axisLabelColor
+            };
+            
+            // Handle axis label font weight
+            if (axisLabelFontWeight === 'bold' || axisLabelFontWeight === 'bolder') {
+                layout.xaxis.title.font.weight = axisLabelFontWeight;
+                layout.yaxis.title.font.weight = axisLabelFontWeight;
+            }
+            
+            // Apply styles to axis labels
+            let xLabelText = document.getElementById('x-label').value;
+            let yLabelText = document.getElementById('y-label').value;
+            
+            if (axisLabelFontStyle === 'italic') {
+                xLabelText = `<i>${xLabelText}</i>`;
+                yLabelText = `<i>${yLabelText}</i>`;
+            }
+            
+            layout.xaxis.title.text = xLabelText;
+            layout.yaxis.title.text = yLabelText;
+            
+            // Apply typography to tick labels
+            layout.xaxis.tickfont = {
+                size: tickLabelFontSize,
+                color: tickLabelColor
+            };
+            
+            layout.yaxis.tickfont = {
+                size: tickLabelFontSize,
+                color: tickLabelColor
+            };
+            
+            // Handle tick label font weight
+            if (tickLabelFontWeight === 'bold') {
+                layout.xaxis.tickfont.weight = tickLabelFontWeight;
+                layout.yaxis.tickfont.weight = tickLabelFontWeight;
+            }
+            
+            // Apply typography to legend
+            layout.legend.font = {
+                size: legendFontSize
+            };
+            
+            // Handle legend font weight
+            if (legendFontWeight === 'bold') {
+                layout.legend.font.weight = legendFontWeight;
+            }
+            
+            return layout;
+        }        // Enhanced title positioning with visual feedback
+        function enableDraggableTitle() {
+            const plotDiv = document.getElementById('volcano-plot');
+            let isDragging = false;
+            let titleElement = null;
+            
+            plotDiv.addEventListener('mousedown', function(e) {
+                // Check if clicking on title
+                const titleElements = plotDiv.querySelectorAll('.gtitle text');
+                titleElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (e.clientX >= rect.left && e.clientX <= rect.right && 
+                        e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                        isDragging = true;
+                        titleElement = el;
+                        el.style.cursor = 'grabbing';
+                        el.style.opacity = '0.7';
+                        e.preventDefault();
+                    }
+                });
+            });
+            
+            plotDiv.addEventListener('mousemove', function(e) {
+                if (isDragging && titleElement) {
+                    const plotRect = plotDiv.getBoundingClientRect();
+                    const x = (e.clientX - plotRect.left) / plotRect.width;
+                    const y = 1 - (e.clientY - plotRect.top) / plotRect.height;
+                    
+                    // Update sliders
+                    document.getElementById('title-x').value = Math.max(0, Math.min(1, x));
+                    document.getElementById('title-y').value = Math.max(0, Math.min(1, y));
+                    updateRangeValue('title-x');
+                    updateRangeValue('title-y');
+                    
+                    // Update plot
+                    if (isDataLoaded) updatePlot();
+                }
+            });
+            
+            plotDiv.addEventListener('mouseup', function() {
+                if (isDragging && titleElement) {
+                    titleElement.style.cursor = 'grab';
+                    titleElement.style.opacity = '1';
+                    isDragging = false;
+                    titleElement = null;
+                }
+            });
+            
+            // Add visual feedback when hovering over title
+            plotDiv.addEventListener('mouseover', function(e) {
+                const titleElements = plotDiv.querySelectorAll('.gtitle text');
+                titleElements.forEach(el => {
+                    el.style.cursor = 'grab';
+                    el.addEventListener('mouseenter', function() {
+                        this.style.opacity = '0.8';
+                    });
+                    el.addEventListener('mouseleave', function() {
+                        if (!isDragging) this.style.opacity = '1';
+                    });
+                });
+            });
+        }
+
+        // Function to update title position controls visibility
+        function updateTitlePositionControls() {
+            const titlePosition = document.getElementById('title-position').value;
+            const customControls = document.getElementById('custom-title-position');
+            
+            if (titlePosition === 'custom') {
+                customControls.style.display = 'block';
+                // Enable draggable functionality
+                setTimeout(enableDraggableTitle, 500);
+            } else {
+                customControls.style.display = 'none';
+            }
+        }
+
+        // Initialize typography controls event listeners
+        document.getElementById('title-position').addEventListener('change', () => {
+            updateTitlePositionControls();
+            if (isDataLoaded) updatePlot();
+        });
+
+        // Add event listeners for all new typography controls
+        ['title-font-style', 'title-text-decoration', 'title-font-family', 
+         'axis-label-font-style', 'axis-label-font-family', 'axis-label-color',
+         'tick-label-font-weight', 'tick-label-color', 'legend-font-weight'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', () => {
+                    if (isDataLoaded) updatePlot();
+                });
+            }
+        });
+
+        // Add event listeners for range inputs
+        ['tick-label-font-size', 'legend-font-size'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', () => {
+                    updateRangeValue(id);
+                    if (isDataLoaded) updatePlot();
+                });
+                updateRangeValue(id);
+            }
+        });
+
+        // Function to set box border presets
+        function setBoxBorderPreset(preset) {
+            const borderWidth = document.getElementById('box-border-width');
+            const borderColor = document.getElementById('box-border-color');
+            const borderRadius = document.getElementById('box-border-radius');
+            
+            switch(preset) {
+                case 'none':
+                    borderWidth.value = '0';
+                    break;
+                case 'subtle':
+                    borderWidth.value = '1';
+                    borderColor.value = '#e9ecef';
+                    borderRadius.value = '10';
+                    break;
+                case 'bold':
+                    borderWidth.value = '3';
+                    borderColor.value = '#007bff';
+                    borderRadius.value = '5';
+                    break;
+            }
+            
+            // Update display and apply styles
+            updateRangeValue('box-border-width');
+            updateRangeValue('box-border-radius');
+            updateBoxBorderStyles();
+        }
+        
+        // Function to update box border styles
+        function updateBoxBorderStyles() {
+            const width = document.getElementById('box-border-width').value;
+            const color = document.getElementById('box-border-color').value;
+            const radius = document.getElementById('box-border-radius').value;
+            
+            // Apply styles to all control sections
+            const controlSections = document.querySelectorAll('.control-section');
+            const plotContainer = document.querySelector('.plot-container');
+            const plotStats = document.querySelector('.plot-stats');
+            
+            const borderStyle = width > 0 ? `${width}px solid ${color}` : 'none';
+            const borderRadiusStyle = `${radius}px`;
+            
+            controlSections.forEach(section => {
+                section.style.border = borderStyle;
+                section.style.borderRadius = borderRadiusStyle;
+            });
+            
+            if (plotContainer) {
+                plotContainer.style.border = borderStyle;
+                plotContainer.style.borderRadius = borderRadiusStyle;
+            }
+            
+            if (plotStats) {
+                plotStats.style.border = borderStyle;
+                plotStats.style.borderRadius = borderRadiusStyle;
+            }
+        }        // Add event listener for Y-axis control
+        document.getElementById('y-axis-max').addEventListener('input', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        // Add event listeners for X-axis range controls
+        document.getElementById('x-axis-auto').addEventListener('change', () => {
+            updateXAxisControls();
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('x-axis-min').addEventListener('input', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('x-axis-max').addEventListener('input', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        // Add event listeners for axis line controls
+        document.getElementById('axis-lines-enabled').addEventListener('change', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('axis-line-color').addEventListener('input', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('axis-line-width').addEventListener('input', () => {
+            updateRangeValue('axis-line-width');
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('major-ticks-enabled').addEventListener('change', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('tick-length').addEventListener('input', () => {
+            updateRangeValue('tick-length');
+            if (isDataLoaded) updatePlot();
+        });
+          document.getElementById('tick-width').addEventListener('input', () => {
+            updateRangeValue('tick-width');
+            if (isDataLoaded) updatePlot();
+        });
+        
+        // Add event listeners for tick spacing controls
+        document.getElementById('auto-tick-spacing').addEventListener('change', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('x-tick-spacing').addEventListener('input', () => {
+            updateRangeValue('x-tick-spacing');
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('y-tick-spacing').addEventListener('input', () => {
+            updateRangeValue('y-tick-spacing');
+            if (isDataLoaded) updatePlot();
+        });
+        
+        // Add event listeners for grid controls
+        document.getElementById('grid-enabled').addEventListener('change', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('grid-color').addEventListener('input', () => {
+            if (isDataLoaded) updatePlot();
+        });
+        
+        document.getElementById('grid-width').addEventListener('input', () => {
+            updateRangeValue('grid-width');
+            if (isDataLoaded) updatePlot();
+        });
+        
+        // Add event listeners for box border controls
+        document.getElementById('box-border-width').addEventListener('input', () => {
+            updateRangeValue('box-border-width');
+            updateBoxBorderStyles();
+        });
+        
+        document.getElementById('box-border-color').addEventListener('input', () => {
+            updateBoxBorderStyles();
+        });
+        
+        document.getElementById('box-border-radius').addEventListener('input', () => {
+            updateRangeValue('box-border-radius');
+            updateBoxBorderStyles();
+        });        // Initialize range value displays
+        updateRangeValue('axis-line-width');
+        updateRangeValue('tick-length');
+        updateRangeValue('tick-width');
+        updateRangeValue('x-tick-spacing');
+        updateRangeValue('y-tick-spacing');
+        updateRangeValue('grid-width');
+        updateRangeValue('box-border-width');
+        updateRangeValue('box-border-radius');
+          // Initialize title position controls
+        updateTitlePositionControls();
+        
+        // Initialize X-axis controls
+        updateXAxisControls();
+        
+        // Initialize box border styles
+        updateBoxBorderStyles();
     </script>
 </body>
 </html>
