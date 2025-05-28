@@ -804,10 +804,9 @@
                 </div>                  <!-- Title and Labels -->
                 <div class="control-section">
                     <h3><i class="fas fa-font"></i>Labels & Typography</h3>
-                    
-                    <div class="control-group">
+                      <div class="control-group">
                         <label for="plot-title">Plot Title</label>
-                        <input type="text" id="plot-title" value="Volcano Plot: MG72 vs MG24" placeholder="Enter title">
+                        <input type="text" id="plot-title" value="MG72 vs MG24" placeholder="Enter title">
                     </div>
                     
                     <div class="control-group">
@@ -966,11 +965,15 @@
                             <option value="bold">Bold</option>
                         </select>
                     </div>
-                    
-                    <div class="control-group">
+                      <div class="control-group">
                         <label for="tick-label-color">Tick Label Color</label>
                         <input type="color" id="tick-label-color" value="#000000" class="color-input">
                     </div>
+                </div>
+                
+                <!-- Legend Controls -->
+                <div class="control-section">
+                    <h3><i class="fas fa-list"></i>Legend Controls</h3>
                     
                     <div class="control-group">
                         <label for="legend-font-size">Legend Font Size</label>
@@ -1210,8 +1213,10 @@
                 if (volcanoData.length === 0) {
                     throw new Error('No valid data rows found after processing');
                 }
+                  isDataLoaded = true;
                 
-                isDataLoaded = true;
+                // Auto-update plot title with uploaded filename (without "Volcano Plot:" prefix)
+                document.getElementById('plot-title').value = uploadedFileName;
                 
                 statusDiv.innerHTML = detectionStatus;
                 document.getElementById('main-content').style.display = 'grid';
